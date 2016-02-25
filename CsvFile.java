@@ -1,11 +1,8 @@
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 public class CsvFile {
@@ -22,22 +19,26 @@ public class CsvFile {
 	 * @return une List<String> contenant chaque ligne du fichier (sauf la
 	 *         première) dans l'ordre.
 	 */
-	private static List<String> readFileLines(File file) throws IOException {
-
+	private static List<String> readFileLines(File file) {
 		List<String> result = new ArrayList<String>();
-
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
-
-		br.readLine(); // Pour sauter juste la 1ère ligne ("user,restaurants,stars")
-
-		for (String line = br.readLine(); line != null; line = br.readLine()) {
-			result.add(line);
+		
+		try{
+	
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+	
+			br.readLine(); // Pour sauter juste la 1ère ligne ("user,restaurants,stars")
+	
+			for (String line = br.readLine(); line != null; line = br.readLine()) {
+				result.add(line);
+			}
+	
+			br.close();
+			fr.close();
+		}catch (Exception e) {
+			System.out.println("Erreur lors de l'ouverture du fichier.");
 		}
-
-		br.close();
-		fr.close();
-
+		
 		return result;
 	}
 
@@ -55,7 +56,7 @@ public class CsvFile {
 	 * 			Seul la dernière note du fichier est prise en compte
 	 * 			(en cas de doublons).
 	 */
-	public static int[][] chargeTrain(String chemin) throws IOException {
+	public static int[][] chargeTrain(String chemin) {
 		// tab représente notre matrice, les clients en lignes et les notes par restaurants en colonnes
 		// Elle est initialisée par défaut avec des zeros partout
 		int[][] tab = new int[nb_clients][nb_restau];
@@ -97,7 +98,7 @@ public class CsvFile {
 	 * @return une List<int[]> donc chaque element est un couple
 	 * 			(client, restaurant).
 	 */
-	public static List<int[]> chargeTest(String chemin) throws IOException {
+	public static List<int[]> chargeTest(String chemin) {
 		// Dans cette liste on va stocker toutes les lignes que nous allons lire à partir de notre Csv
 		List<String> lignes = readFileLines(new File(chemin));
 	
@@ -130,7 +131,7 @@ public class CsvFile {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		int[][] tab = chargeTrain("train.csv");
 		System.out.println("Hello!");
 		affiche_mat(tab);

@@ -148,8 +148,7 @@ public class CollaborativeFiltering {
 				// System.out.println("c'est bon pour la ligne "+i+" du fichier dev.csv
 				// La note prédite est
 				// "+train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]);
-				System.out
-						.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  " + note);
+				System.out.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  " + note);
 
 			}
 
@@ -180,12 +179,10 @@ public class CollaborativeFiltering {
 				double note = vote_pondere(train_data, num_client, num_restau);
 				System.out.println("la note est" + note);
 				ffw.write(Integer.toString((int) Math.round(note)) + "\n");
-
 				// System.out.println("c'est bon pour la ligne "+i+" du fichier
 				// dev.csv La note prédite est
 				// "+train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]);
-				System.out
-						.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  " + note);
+				System.out.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  " + note);
 
 			}
 
