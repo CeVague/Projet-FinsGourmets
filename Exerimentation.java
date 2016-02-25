@@ -11,8 +11,7 @@ public class Exerimentation {
 	public static void main(String[] args) throws IOException {
 
 		// Chargement du fichier d'entrainement
-		File myfile = new File("train.csv");
-		int[][] tab = CsvFile.readFile(myfile);
+		int[][] tab = CsvFile.chargeTrain("train.csv");
 
 		// Initialisation de la liste des moyennes obtenues pour chaque restaurants
 		int[] moy_rest = new int[nb_restau];
@@ -41,8 +40,7 @@ public class Exerimentation {
 		}
 
 		// Creation des prédictions pour le fichier dev
-		myfile = new File("dev.csv");
-		List<String> fileLignes = CsvFile.readFileline(myfile);
+		List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
 
 		try {
 			File ff = new File("dev.predict");
@@ -50,10 +48,9 @@ public class Exerimentation {
 			FileWriter ffw = new FileWriter(ff);
 
 			// Pour chaque ligne du fichier dev.csv
-			for (String binome : fileLignes) {
+			for (int[] binome : fileLignes) {
 				// On récupère le moyenne du restaurant que l'on écrit dans le fichier
-				String[] temp_bis = binome.split(",");
-				ffw.write(Integer.toString(moy_rest[Integer.parseInt(temp_bis[1])]) + "\n");
+				ffw.write(Integer.toString(moy_rest[binome[1]]) + "\n");
 			}
 
 			ffw.close();
@@ -62,8 +59,7 @@ public class Exerimentation {
 		}
 
 		// Creation des prédictions pour le fichier test
-		myfile = new File("test.csv");
-		fileLignes = CsvFile.readFileline(myfile);
+		fileLignes = CsvFile.chargeTest("test.csv");
 
 		try {
 			File ff = new File("test.predict");
@@ -71,10 +67,9 @@ public class Exerimentation {
 			FileWriter ffw = new FileWriter(ff);
 
 			// Pour chaque ligne du fichier test.csv
-			for (String binome : fileLignes) {
+			for (int[] binome : fileLignes) {
 				// On récupère le moyenne du restaurant que l'on écrit dans le fichier
-				String[] temp_bis = binome.split(",");
-				ffw.write(Integer.toString(moy_rest[Integer.parseInt(temp_bis[1])]) + "\n");
+				ffw.write(Integer.toString(moy_rest[binome[1]]) + "\n");
 			}
 
 			ffw.close();

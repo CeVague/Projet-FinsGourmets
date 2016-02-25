@@ -49,11 +49,9 @@ public class KNN_Simple {
 
 	public static void main(String[] args) throws IOException {
 		// Chargement du fichier d'entrainement
-		File myfile = new File("train.csv");
-		int[][] train_data = CsvFile.readFile(myfile);
+		int[][] train_data = CsvFile.chargeTrain("train.csv");
 		// Creation des prédictions pour le fichier dev
-		myfile = new File("dev.csv");
-		List<String> fileLignes = CsvFile.readFileline(myfile);
+		List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
 
 		try {
 			System.out.println("Ecriture dans dev2.predict.....");
@@ -63,15 +61,13 @@ public class KNN_Simple {
 			FileWriter ffw = new FileWriter(ff);
 			int i = 0;
 			// Pour chaque ligne du fichier dev.csv
-			for (String binome : fileLignes) {
+			for (int[] binome : fileLignes) {
 				i++;
-				// On récupère pour quel couple (client,restaurant on va prédire)
-				String[] temp_bis = binome.split(",");
 				// On récupère le numéro client
-				int num_client = Integer.parseInt(temp_bis[0]);
-				// System.out.println("num clien : "+num_client);
+				int num_client = binome[0];
+				System.out.println("num clien  :  " + num_client);
 				// on récupère le numéro restaurant
-				int num_restau = Integer.parseInt(temp_bis[1]);
+				int num_restau = binome[1];
 				// On calcule la distance entre notre client et
 				// tout les autres clients qui ont voté pour ce restaurant
 				double[] distances = Tout_Distances(train_data, num_client);
@@ -79,9 +75,9 @@ public class KNN_Simple {
 				int ligne_plus_proche = indice_min(train_data, distances, num_client, num_restau);
 				// On récupère la note donnée à ce restaurant dans cette ligne
 				// et on l'écrit dans le fichier
-				ffw.write(Integer.toString(train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]) + "\n");
+				ffw.write(Integer.toString(train_data[ligne_plus_proche][num_restau]) + "\n");
 				System.out.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  "
-						+ train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]);
+						+ train_data[ligne_plus_proche][num_restau]);
 
 			}
 
@@ -92,8 +88,7 @@ public class KNN_Simple {
 		System.out.println("dev2.predict est prêt");
 
 		// Creation des prédictions pour le fichier test
-		myfile = new File("test.csv");
-		fileLignes = CsvFile.readFileline(myfile);
+		fileLignes = CsvFile.chargeTest("test.csv");
 		System.out.println("Ecriture dans test2.predict...");
 
 		try {
@@ -102,23 +97,21 @@ public class KNN_Simple {
 			FileWriter ffw = new FileWriter(ff);
 			int i = 0;
 			// Pour chaque ligne du fichier dev.csv
-			for (String binome : fileLignes) {
+			for (int[] binome : fileLignes) {
 				i++;
-				// On récupère pour quel couple (client,restaurant on va prédire)
-				String[] temp_bis = binome.split(",");
 				// On récupère le numéro client
-				int num_client = Integer.parseInt(temp_bis[0]);
+				int num_client = binome[0];
 				System.out.println("num clien  :  " + num_client);
 				// on récupère le numéro restaurant
-				int num_restau = Integer.parseInt(temp_bis[1]);
+				int num_restau = binome[1];
 				// On calcule la distance entre notre client et tout les autres clients qui ont voté pour ce restaurant
 				double[] distances = Tout_Distances(train_data, num_client);
 				// On cherche le voisin/ligne plus proche/similaire
 				int ligne_plus_proche = indice_min(train_data, distances, num_client, num_restau);
 				// On récupère la note donnée à ce restaurant dans cette ligne et on l'écrit dans le fichier
-				ffw.write(Integer.toString(train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]) + "\n");
+				ffw.write(Integer.toString(train_data[ligne_plus_proche][num_restau]) + "\n");
 				System.out.println("c'est bon pour la ligne  " + i + " du ficher test.csv  La note prédite est  "
-						+ train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]);
+						+ train_data[ligne_plus_proche][num_restau]);
 
 			}
 

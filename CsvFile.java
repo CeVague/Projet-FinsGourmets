@@ -13,7 +13,16 @@ public class CsvFile {
 	public final static int nb_restau = 1751;
 	public final static int nb_clients = 3965;
 
-	public static List<String> readFileline(File file) throws IOException {
+	
+	/**
+	 * Systheme de lecture ligne par ligne de fichiers pour en retourner la
+	 * liste.
+	 * 
+	 * @param file le fichier concerné
+	 * @return une List<String> contenant chaque ligne du fichier (sauf la
+	 *         première) dans l'ordre.
+	 */
+	private static List<String> readFileLines(File file) throws IOException {
 
 		List<String> result = new ArrayList<String>();
 
@@ -32,37 +41,85 @@ public class CsvFile {
 		return result;
 	}
 
-	public static int[][] readFile(File file) throws IOException {
-		// tab représente notre matrice, les clients en lignes et les notes par restaurants en colones
+	
+	/**
+	 * Fonction de chargement des fichiers d'entrainements (client, restaurant, note)
+	 * en un tableau de notes.
+	 * 
+	 * Pas de note = 0.
+	 * 
+	 * @param chemin le chemin vers le fichier
+	 * 			(ou son nom si il est à la racine du projet java)
+	 * @return un int[][] où le premier paramètre est le num client et le
+	 * 			deuxieme est le num du restaurant.
+	 * 			Seul la dernière note du fichier est prise en compte
+	 * 			(en cas de doublons).
+	 */
+	public static int[][] chargeTrain(String chemin) throws IOException {
+		// tab représente notre matrice, les clients en lignes et les notes par restaurants en colonnes
 		// Elle est initialisée par défaut avec des zeros partout
 		int[][] tab = new int[nb_clients][nb_restau];
 
 		// Dans ce tableau on va stocker le num client , restau et la note mais en String
-		String[] colones_split = new String[3];
+		String[] colonnes_split = new String[3];
 		// Dans ce tableau on va stocker le num client , restau et la note mais en Entier
-		int[] colones = new int[3];
+		int[] colonnes = new int[3];
 		// Dans cette liste on va stocker toutes les lignes que nous allons lire à partir de notre Csv
-		List<String> tab_line = readFileline(file);
+		File myfile = new File(chemin);
+		List<String> lignes = readFileLines(myfile);
 		
-		// On parcourt les lignes qu'on récupérer une par une
-		for (String line : tab_line) {
+		// On parcourt les lignes qu'on récupère une par une
+		for (String ligne : lignes) {
 			// On fait un split pour récuperer chaque valeur à part (user, restau, note)
-			colones_split = line.split(SEPARATOR);
+			colonnes_split = ligne.split(SEPARATOR);
 			// On convertit les valeurs qu'on eu grâce en entiers
 			for (int k = 0; k <= 2; k++) {
-				// System.out.println(colones_split[k]);
-				colones[k] = Integer.parseInt(colones_split[k]);
+				colonnes[k] = Integer.parseInt(colonnes_split[k]);
 			}
-			// System.out.println(colones[1]);
+			// System.out.println(colonnes[1]);
 			// Remplissage de la matrice
 			// Si la ligne qu'on récupérée est "3,0,5"
-			// Grâce au split elle stocké dans colones_split {"3","0","5"}
-			// Grâce à la conversion , elle est stocké dans colones {3,0,5}
+			// Grâce au split elle stocké dans colonnes_split {"3","0","5"}
+			// Grâce à la conversion , elle est stocké dans colonnes {3,0,5}
 			// donc on fait cette affecttaion tab[3][0]=5;
-			tab[colones[0]][colones[1]] = colones[2];
+			tab[colonnes[0]][colonnes[1]] = colonnes[2];
 		}
 
 		return tab;
+	}
+	
+	
+	/**
+	 * Fonction de chargement des fichier de test (dev et test) (client, restaurant, ?)
+	 * 
+	 * @param chemin le chemin vers le fichier
+	 * 			(ou son nom si il est à la racine du projet java)
+	 * @return une List<int[]> donc chaque element est un couple
+	 * 			(client, restaurant).
+	 */
+	public static List<int[]> chargeTest(String chemin) throws IOException {
+		// Dans cette liste on va stocker toutes les lignes que nous allons lire à partir de notre Csv
+		List<String> lignes = readFileLines(new File(chemin));
+	
+		// Initialisation de la liste de retour
+		List<int[]> liste = new ArrayList<int[]>();
+
+		// Dans ce tableau on va stocker le couple (num client, restau) en int
+		int[] couple = new int[2];
+		
+		// On récupère les lignes une par une
+		for (String ligne : lignes) {
+			// On fait un split pour récuperer chaque valeur à part (user, restau, ?)
+			String[] temp = ligne.split(SEPARATOR);
+			// On convertit les valeurs qu'on eu grâce en entiers
+			for (int k = 0; k < 2; k++) {
+				couple[k] = Integer.parseInt(temp[k]);
+			}
+			// Et on ajoute ce couple à la liste
+			liste.add(couple.clone());
+		}
+
+		return liste;
 	}
 
 	// Pour afficher trois collones de la matrice
@@ -74,8 +131,7 @@ public class CsvFile {
 	}
 
 	public static void main(String[] args) throws IOException {
-		File myfile = new File("train.csv");
-		int[][] tab = readFile(myfile);
+		int[][] tab = chargeTrain("train.csv");
 		System.out.println("Hello!");
 		affiche_mat(tab);
 	}
