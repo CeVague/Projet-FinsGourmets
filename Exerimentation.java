@@ -12,7 +12,7 @@ public class Exerimentation {
 
 		// Chargement du fichier d'entrainement
 		File myfile = new File("train.csv");
-		Integer[][] tab = CsvFile.readFile(myfile);
+		int[][] tab = CsvFile.readFile(myfile);
 
 		// Initialisation de la liste des moyennes obtenues pour chaque restaurants
 		int[] moy_rest = new int[nb_restau];
@@ -40,9 +40,6 @@ public class Exerimentation {
 			moy_rest[i] = total;
 		}
 
-		
-		
-		
 		// Creation des prédictions pour le fichier dev
 		myfile = new File("dev.csv");
 		List<String> fileLignes = CsvFile.readFileline(myfile);
