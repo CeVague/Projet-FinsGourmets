@@ -66,9 +66,11 @@ public class CollaborativeFiltering {
 			if (client_actuel != i && train_data[i][restau] != 0) {
 
 				double x = similarite(train_data, client_actuel, i);
-
+				
 				// System.out.println("x : "+x);
 				if(x!=0){
+					
+					// x = Math.pow(x, 4); // Améliore très légèrement le résultat mais pas indispensable
 					s1 += x * (train_data[i][restau] - moyenneClient[i]);
 					s2 += Math.abs(x);
 				}
