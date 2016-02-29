@@ -41,21 +41,26 @@ public class Exerimentation {
 		// Creation des prédictions pour le fichier dev
 		List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
 
-		Predict ff = new Predict("dev.predict");
+		PredictFile ff = new PredictFile("dev.predict");
 		for (int[] binome : fileLignes)
-			Predict.add(moy_rest[binome[1]]);
-		ff.ecrit();
+			ff.add(moy_rest[binome[1]]);
+		ff.close();
 		
 		
 		
 		// Creation des prédictions pour le fichier test
 		fileLignes = CsvFile.chargeTest("test.csv");
 
-		ff = new Predict("test.predict");
+		ff = new PredictFile("test.predict");
 		for (int[] binome : fileLignes)
-			Predict.add(Integer.toString(moy_rest[binome[1]]));
-		ff.ecrit();
+			ff.add(Integer.toString(moy_rest[binome[1]]));
+		ff.close();
 
 		System.out.println("Fini :)");
+		
+		PredictFile.zip("MoyenneSimple.zip");
+
+		System.out.println("Et zippé");
+		
 	}
 }

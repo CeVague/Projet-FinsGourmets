@@ -2,7 +2,6 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CollaborativeFiltering {
@@ -128,8 +127,6 @@ public class CollaborativeFiltering {
 	public static void main(String[] args) throws IOException {
 		// Chargement du fichier d'entrainement
 		int[][] train_data = CsvFile.chargeTrain("train.csv");
-		// Creation des prédictions pour le fichier dev
-		List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
 
 		// On précalcule la moyenne de chaque clients
 		moyenneClient = new double[3965];
@@ -138,6 +135,35 @@ public class CollaborativeFiltering {
 		}
 		
 		
+		
+
+		// Creation des prédictions pour le fichier dev.csv
+		List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
+		
+		System.out.println("Ecriture dans dev.predict.....");
+		PredictFile ff = new PredictFile("dev.predict");
+		for (int[] binome : fileLignes) {
+			double note = vote_pondere(train_data, binome[0], binome[1]);
+			ff.add(note);
+		}
+		ff.close();
+		
+
+		// Creation des prédictions pour le fichier test.csv
+		fileLignes = CsvFile.chargeTest("test.csv");
+		
+		System.out.println("Ecriture dans test.predict.....");
+		ff = new PredictFile("test.predict");
+		for (int[] binome : fileLignes) {
+			double note = vote_pondere(train_data, binome[0], binome[1]);
+			ff.add(note);
+		}
+		ff.close();
+		
+		PredictFile.zip("FiltreColaboratif.zip");
+		
+		/*
+		 * Ancien code remplacé par ce qu'il y a au dessus pour tester
 		try {
 			System.out.println("Ecriture dans dev3.predict.....");
 
@@ -168,20 +194,22 @@ public class CollaborativeFiltering {
 			System.out.println("Problème");
 
 		}
-		System.out.println("dev3.predict est prêt");
+		
+		
+		System.out.println("dev.predict est prêt");
 		// Creation des prédictions pour le fichier test.csv
 		fileLignes = CsvFile.chargeTest("test.csv");
 
 		try {
-			System.out.println("Ecriture dans test3.predict.....");
+			System.out.println("Ecriture dans test.predict.....");
 
-			File ff = new File("test3.predict");
+			File ff = new File("test.predict");
 			ff.createNewFile();
 			FileWriter ffw = new FileWriter(ff);
-			int i = 0;
+			//int i = 0;
 			// Pour chaque ligne du fichier dev.csv
 			for (int[] binome : fileLignes) {
-				i++;
+				//i++;
 				// On récupère le numéro client
 				int num_client = binome[0];
 				// on récupère le numéro restaurant
@@ -201,7 +229,8 @@ public class CollaborativeFiltering {
 			System.out.println("Problème");
 
 		}
-
+		 */
+		
 		System.out.println("Fini :)");
 
 	}
