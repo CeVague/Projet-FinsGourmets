@@ -12,7 +12,7 @@ public class CsvFile {
     public final static int nb_clients = 3965;
 
     /**
-     * Systheme de lecture ligne par ligne de fichiers pour en retourner la
+     * Système de lecture ligne par ligne de fichiers pour en retourner la
      * liste.
      *
      * @param file le fichier concerné
@@ -51,7 +51,7 @@ public class CsvFile {
      * @param chemin le chemin vers le fichier (ou son nom si il est à la racine
      * du projet java)
      * @return un int[][] où le premier paramètre est le num client et le
-     * deuxieme est le num du restaurant. Seul la dernière note du fichier est
+     * deuxième est le num du restaurant. Seul la dernière note du fichier est
      * prise en compte (en cas de doublons).
      */
     public static int[][] chargeTrain(String chemin) {
@@ -119,19 +119,5 @@ public class CsvFile {
         }
 
         return liste;
-    }
-
-    // Pour afficher trois collones de la matrice
-    public static void affiche_mat(int[][] tab) {
-        for (int i = 0; i < tab.length; i++) {
-            System.out.println(tab[i][0] + "," + tab[i][1] + "," + tab[i][2]);
-
-        }
-    }
-
-    public static void main(String[] args) {
-        int[][] tab = chargeTrain("train.csv");
-        System.out.println("Hello!");
-        affiche_mat(tab);
     }
 }
