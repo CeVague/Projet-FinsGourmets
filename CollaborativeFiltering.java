@@ -8,11 +8,16 @@ public class CollaborativeFiltering {
 
     public static double vote_moyen(int[] x) {
         double m = 0.0;
+        double n = 0.0;
+        
         for (int i : x) {
-            m += i;
+            if (i!=0){
+                m += i;
+                n += 1;
+            }
         }
-        m = m / x.length;
-        return m;
+        
+        return m/n;
     }
 
     public static double similarite(int[][] tab, int client_actuel, int client) {
@@ -35,10 +40,10 @@ public class CollaborativeFiltering {
             // else {s2=1; s3=1;}
         }
 
-        if (s2 == 0) {
+        if (s1 == 0 || s2 == 0 || s3 == 0) {
             return 0;
         }
-
+        
         return s1 / Math.sqrt(s2 * s3);
     }
 
@@ -66,8 +71,6 @@ public class CollaborativeFiltering {
 
                 // System.out.println("x : "+x);
                 if (x != 0) {
-
-                    // x = Math.pow(x, 4); // Améliore très légèrement le résultat mais pas indispensable
                     s1 += x * (train_data[i][restau] - moyenneClient[i]);
                     s2 += Math.abs(x);
                 }
@@ -75,8 +78,15 @@ public class CollaborativeFiltering {
             }
         }
         // System.out.println("s2 : "+s2);
-        vp = s1 / s2;
-        return (moyenneClient[client_actuel] + vp);
+        vp = moyenneClient[client_actuel] + (s1 / s2);
+        
+        if(vp>5){
+            return 5;
+        }else if(vp<1){
+            return 1;
+        }
+        
+        return vp;
 
         // Calculer la vote ponderé en utlisant le cos comme indice de similarité
         /*
@@ -155,76 +165,9 @@ public class CollaborativeFiltering {
         }
         ff.close();
 
+        // On zip le résultat
         PredictFile.zip("FiltreColaboratif.zip");
 
-        /*
-		 * Ancien code remplacé par ce qu'il y a au dessus pour tester
-		try {
-			System.out.println("Ecriture dans dev3.predict.....");
-
-			File ff = new File("dev3.predict");
-			ff.createNewFile();
-			FileWriter ffw = new FileWriter(ff);
-			int i = 0;
-			// Pour chaque ligne du fichier dev.csv
-			for (int[] binome : fileLignes) {
-				i++;
-
-				// On récupère le numéro client
-				int num_client = binome[0];
-				// on récupère le numéro restaurant
-				int num_restau = binome[1];
-				double note = vote_pondere(train_data, num_client, num_restau);
-				ffw.write(Integer.toString((int) Math.round(note)) + "\n");
-				// System.out.println("c'est bon pour la ligne "+i+" du fichier dev.csv
-				// La note prédite est
-				// "+train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]);
-				//System.out.println("num clien  :  " + num_client);
-				//System.out.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  " + note);
-
-			}
-
-			ffw.close();
-		} catch (Exception e) {
-			System.out.println("Problème");
-
-		}
-
-
-		System.out.println("dev.predict est prêt");
-		// Creation des prédictions pour le fichier test.csv
-		fileLignes = CsvFile.chargeTest("test.csv");
-
-		try {
-			System.out.println("Ecriture dans test.predict.....");
-
-			File ff = new File("test.predict");
-			ff.createNewFile();
-			FileWriter ffw = new FileWriter(ff);
-			//int i = 0;
-			// Pour chaque ligne du fichier dev.csv
-			for (int[] binome : fileLignes) {
-				//i++;
-				// On récupère le numéro client
-				int num_client = binome[0];
-				// on récupère le numéro restaurant
-				int num_restau = binome[1];
-				double note = vote_pondere(train_data, num_client, num_restau);
-				ffw.write(Integer.toString((int) Math.round(note)) + "\n");
-				// System.out.println("c'est bon pour la ligne "+i+" du fichier
-				// dev.csv La note prédite est
-				// "+train_data[ligne_plus_proche][Integer.parseInt(temp_bis[1])]);
-				//System.out.println("num clien  :  " + num_client);
-				//System.out.println("c'est bon pour la ligne  " + i + " du fichier dev.csv  La note prédite est  " + note);
-
-			}
-
-			ffw.close();
-		} catch (Exception e) {
-			System.out.println("Problème");
-
-		}
-         */
         System.out.println("Fini :)");
 
     }
