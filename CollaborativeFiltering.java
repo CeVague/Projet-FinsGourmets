@@ -1,5 +1,4 @@
 
-import java.io.IOException;
 import java.util.List;
 
 public class CollaborativeFiltering {
@@ -78,7 +77,10 @@ public class CollaborativeFiltering {
             }
         }
         // System.out.println("s2 : "+s2);
-        vp = moyenneClient[client_actuel] + (s1 / s2);
+        vp = moyenneClient[client_actuel];
+        if(s2!=0){
+            vp += s1 / s2;
+        }
         
         if(vp>5){
             return 5;
@@ -133,7 +135,7 @@ public class CollaborativeFiltering {
         return cos;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // Chargement du fichier d'entrainement
         int[][] train_data = CsvFile.chargeTrain("train.csv");
 
