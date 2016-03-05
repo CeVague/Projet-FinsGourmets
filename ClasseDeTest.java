@@ -14,7 +14,7 @@ public class ClasseDeTest {
     public static void main(String[] args){
         int k = 10;
         
-        VerificationCroisee test = new VerificationCroisee(k, "train.csv");
+        ValidationCroisee test = new ValidationCroisee(k, "train.csv");
         
         double moyenne = 0;
         

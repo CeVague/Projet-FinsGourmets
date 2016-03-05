@@ -10,7 +10,7 @@ import java.util.List;
  * d'algos
  * @author Cédric
  */
-public class VerificationCroisee {
+public class ValidationCroisee {
     private final int[][] train_data;
     private final List<Integer[]> listeTrainTotal;
     private final int tailleDeK;
@@ -20,7 +20,7 @@ public class VerificationCroisee {
     private List<Integer> listeNotes;
     
     
-    public VerificationCroisee(int k, String chemin){
+    public ValidationCroisee(int k, String chemin){
         // On charge la matrice de base
         this.train_data = CsvFile.chargeTrain(chemin);
         
