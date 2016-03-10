@@ -37,6 +37,29 @@ public class SimpleMoyenne {
             moy_rest[i] = total;
         }
 
+        
+        
+        /*
+        // Calcul de l'écart type entre note client et moyenne restau
+        {
+        PredictFile ff = new PredictFile("statsET.txt");
+        for(int[] client : tab){
+            double somme = 0;
+            double nb = 0;
+            
+            for(int i=0;i<nb_restau;i++){
+                if(client[i]!=0){
+                    somme += Math.pow(client[i]-moy_rest[i], 2);
+                    nb++;
+                }
+            }
+            ff.add(Math.sqrt(somme)/nb);
+        }
+        ff.close();
+        
+        }
+        */
+        
         // Creation des prédictions pour le fichier dev
         List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
 

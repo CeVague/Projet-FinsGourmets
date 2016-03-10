@@ -1,5 +1,6 @@
 
 import java.util.List;
+import weka.core.matrix.*;
 
 /*
     Juste une classe pour faire mes test
@@ -12,6 +13,49 @@ public class ClasseDeTest {
     
     
     public static void main(String[] args){
+        
+        int[][] tabTemp = CsvFile.chargeTrain("train.csv");
+        
+        System.out.println("Fichier chargé...");
+        
+        double[][] tab = new double[tabTemp.length][tabTemp[0].length];
+        
+        for(int i=0;i<tabTemp.length;i++){
+            for(int j=0;j<tabTemp[0].length;j++){
+                tab[i][j] = tabTemp[i][j];
+            }
+        }
+        
+        System.out.println("Tableau converti...");
+        
+        Matrix mat = new Matrix(tab);
+        // Matrix mat = new Matrix(new double[][]{{1,0,0,0,2},{0,0,3,0,0},{0,0,0,0,0},{0,4,0,0,0}});
+        
+        System.out.println("Matrix créée...");
+        
+        SingularValueDecomposition SVD = new SingularValueDecomposition(mat);
+        
+        System.out.println("SVD calculé...");
+        
+        Matrix U = SVD.getU();
+        Matrix V = SVD.getS();
+        Matrix S = SVD.getV().transpose();
+        
+        System.out.println("Sous matrices récupérés...");
+        
+        Matrix A = V.times(S);
+        Matrix Fin = U.times(A);
+        
+        System.out.println("Fin de multiplication...");
+        
+        System.out.println(Fin.get(0, 0));
+        System.out.println(Fin.get(1, 1));
+        System.out.println(Fin.get(1989,1235));
+        System.out.println(Fin.get(1558,59));
+        
+       
+        
+        /*
         int k = 10;
         
         ValidationCroisee test = new ValidationCroisee(k, "train.csv");
@@ -23,7 +67,7 @@ public class ClasseDeTest {
             int[][] train_data = test.trainData();
             
             
-            /*
+            
             // Initialisation de la liste des moyennes obtenues pour chaque restaurants
             int[] moy_rest = new int[nb_restau];
 
@@ -56,7 +100,7 @@ public class ClasseDeTest {
             for (Integer[] binome : fileLignes) {
                 test.add(moy_rest[binome[1]]);
             }
-            */
+            
             
             
             
@@ -85,5 +129,10 @@ public class ClasseDeTest {
         }
         
         System.out.println(moyenne/k);
+        */
+        
+        
+        
+        
     }
 }
