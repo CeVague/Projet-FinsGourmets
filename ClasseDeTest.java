@@ -1,6 +1,4 @@
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import weka.core.matrix.*;
 
@@ -10,24 +8,18 @@ import weka.core.matrix.*;
 */
 public class ClasseDeTest {
     
-    private final static int nb_restau = 1751;
-    private final static int nb_clients = 3965;
+    //private final static int nb_restau = 1751;
+    //private final static int nb_clients = 3965;
     
     
     public static void main(String[] args){
         
         int[][] tabTemp = CsvFile.chargeTrain("train.csv");
-        List<int[]> listTemp =  CsvFile.chargeTrainList("train.csv");
         
         System.out.println("Fichier chargé...");
         
-        
-        
-        
-        
-        
         // Initialisation de la liste des moyennes obtenues pour chaque restaurants
-        double[] moy_rest = new double[nb_restau];
+        double[] moy_rest = new double[tabTemp[0].length];
 
         // Remplissage de la liste :
         // Pour chaque restaurant
@@ -52,27 +44,14 @@ public class ClasseDeTest {
             moy_rest[i] = total;
         }
         
-        
-        
-        
-        
-        double moyenne = 0;
-        for(int[] i : listTemp){
-            moyenne+=i[2];
-        }
-        moyenne = moyenne/listTemp.size();
-        
-        
-        
-        
+        // On remplit les troues de la matrice avec les moyennes 
         double[][] tab = new double[tabTemp.length][tabTemp[0].length];
         
         for(int i=0;i<tabTemp.length;i++){
             for(int j=0;j<tabTemp[0].length;j++){
                 tab[i][j] = tabTemp[i][j];
                 if(tabTemp[i][j]==0){
-                    tab[i][j] = moyenne;
-                    //tab[i][j] = moy_rest[j];
+                    tab[i][j] = moy_rest[j];
                 }
             }
         }
@@ -80,8 +59,7 @@ public class ClasseDeTest {
         System.out.println("Tableau converti...");
         
         Matrix mat = new Matrix(tab);
-        // Matrix mat = new Matrix(new double[][]{{1,0,0,0,2},{0,0,3,0,0},{0,0,0,0,0},{0,4,0,0,0}});
-        
+         
         System.out.println("Matrice créée...");
         
         SingularValueDecomposition SVD = new SingularValueDecomposition(mat);
@@ -101,8 +79,11 @@ public class ClasseDeTest {
                 S.set(i, i, 0);
             }
 
-            Matrix A = S.times(V);
-            Matrix Fin = U.times(A);
+            System.out.println("Début des multiplications...");
+            
+            // U*S*V
+            Matrix A = U.times(S);
+            Matrix Fin = A.times(V);
 
             System.out.println("Fin de multiplication...");
 
@@ -126,7 +107,7 @@ public class ClasseDeTest {
 
             System.out.println("Fini pour k = " + k + " :)");
 
-            PredictFile.zip("SVD moyenne G k=" + Integer.toString(k) + ".zip");
+            PredictFile.zip("SVD k=" + Integer.toString(k) + ".zip");
 
             System.out.println("Et zippé");
         }
