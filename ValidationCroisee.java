@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class ValidationCroisee {
     private final int[][] train_data;
-    private final List<Integer[]> listeTrainTotal;
+    private final List<int[]> listeTrainTotal;
     private final int tailleDeK;
     
     private int k;
-    private List<Integer[]> listeEvalTemp;
+    private List<int[]> listeEvalTemp;
     private List<Integer> listeNotes;
     
     
@@ -24,15 +24,8 @@ public class ValidationCroisee {
         // On charge la matrice de base
         this.train_data = CsvFile.chargeTrain(chemin);
         
-        // Initialisation de la liste de valeur
-        listeTrainTotal = new ArrayList<Integer[]>();
-        for(int i=0;i<train_data.length;i++){
-            for(int j=0;j<train_data[0].length;j++){
-                if(train_data[i][j] != 0){
-                    listeTrainTotal.add(new Integer[]{i, j, train_data[i][j]});
-                }
-            }
-        }
+        // On charge la liste de valeur
+        this.listeTrainTotal = CsvFile.chargeTrainList(chemin);
         
         // Mélange les valeurs
         Collections.shuffle(listeTrainTotal);
@@ -61,19 +54,19 @@ public class ValidationCroisee {
         }
         
         for(int i=(k*tailleDeK);i<((k+1)*tailleDeK);i++){
-            Integer[] temp = listeTrainTotal.get(i);
+            int[] temp = listeTrainTotal.get(i);
             retour[temp[0]][temp[1]] = 0;
         }
         
         return retour;
     }
     
-    public List<Integer[]> trainEvaluation(){
-        listeEvalTemp = new ArrayList<Integer[]>();
+    public List<int[]> trainEvaluation(){
+        listeEvalTemp = new ArrayList<int[]>();
         
         for(int i=(k*tailleDeK);i<((k+1)*tailleDeK);i++){
-            Integer[] temp = listeTrainTotal.get(i);
-            listeEvalTemp.add(new Integer[]{temp[0], temp[1]});
+            int[] temp = listeTrainTotal.get(i);
+            listeEvalTemp.add(new int[]{temp[0], temp[1]});
         }
         
         return listeEvalTemp;
@@ -87,7 +80,7 @@ public class ValidationCroisee {
         double resultat = 0;
         
         for(int i=0;i<listeNotes.size();i++){
-            Integer[] temp = listeEvalTemp.get(i);
+            int[] temp = listeEvalTemp.get(i);
             resultat+=Math.pow(listeNotes.get(i) - train_data[temp[0]][temp[1]] ,2);
         }
         

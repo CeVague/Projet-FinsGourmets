@@ -1,4 +1,6 @@
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import weka.core.matrix.*;
 
@@ -9,20 +11,69 @@ import weka.core.matrix.*;
 public class ClasseDeTest {
     
     private final static int nb_restau = 1751;
-    private final static int nb_clients = 3962;
+    private final static int nb_clients = 3965;
     
     
     public static void main(String[] args){
         
         int[][] tabTemp = CsvFile.chargeTrain("train.csv");
+        List<int[]> listTemp =  CsvFile.chargeTrainList("train.csv");
         
         System.out.println("Fichier chargé...");
+        
+        
+        
+        
+        
+        
+        // Initialisation de la liste des moyennes obtenues pour chaque restaurants
+        double[] moy_rest = new double[nb_restau];
+
+        // Remplissage de la liste :
+        // Pour chaque restaurant
+        for (int i = 0; i < tabTemp[0].length; i++) {
+            double total = 0;
+            double compt = 0;
+
+            // On additionne les notes de tous les clients qui en ont donnée
+            for (int j = 0; j < tabTemp.length; j++) {
+                if (tabTemp[j][i] != 0) {
+                    compt++;
+                    total += tabTemp[j][i];
+                }
+            }
+
+            // On fait la moyenne (arrondi scientifique)
+            if (compt > 0) {
+                total = total / compt;
+            }
+
+            // Et on place la moyenne dans notre liste des moyennes
+            moy_rest[i] = total;
+        }
+        
+        
+        
+        
+        
+        double moyenne = 0;
+        for(int[] i : listTemp){
+            moyenne+=i[2];
+        }
+        moyenne = moyenne/listTemp.size();
+        
+        
+        
         
         double[][] tab = new double[tabTemp.length][tabTemp[0].length];
         
         for(int i=0;i<tabTemp.length;i++){
             for(int j=0;j<tabTemp[0].length;j++){
                 tab[i][j] = tabTemp[i][j];
+                if(tabTemp[i][j]==0){
+                    tab[i][j] = moyenne;
+                    //tab[i][j] = moy_rest[j];
+                }
             }
         }
         
@@ -31,29 +82,54 @@ public class ClasseDeTest {
         Matrix mat = new Matrix(tab);
         // Matrix mat = new Matrix(new double[][]{{1,0,0,0,2},{0,0,3,0,0},{0,0,0,0,0},{0,4,0,0,0}});
         
-        System.out.println("Matrix créée...");
+        System.out.println("Matrice créée...");
         
         SingularValueDecomposition SVD = new SingularValueDecomposition(mat);
         
         System.out.println("SVD calculé...");
         
         Matrix U = SVD.getU();
-        Matrix V = SVD.getS();
-        Matrix S = SVD.getV().transpose();
+        Matrix S = SVD.getS();
+        Matrix V = SVD.getV().transpose();
+        
         
         System.out.println("Sous matrices récupérés...");
         
-        Matrix A = V.times(S);
-        Matrix Fin = U.times(A);
-        
-        System.out.println("Fin de multiplication...");
-        
-        System.out.println(Fin.get(0, 0));
-        System.out.println(Fin.get(1, 1));
-        System.out.println(Fin.get(1989,1235));
-        System.out.println(Fin.get(1558,59));
-        
-       
+        for(int k=29;k>=1;k--){
+            // On ne garde que les valeurs de S assez grandes
+            for(int i=k;i<Math.min(S.getRowDimension(), S.getColumnDimension());i++){
+                S.set(i, i, 0);
+            }
+
+            Matrix A = S.times(V);
+            Matrix Fin = U.times(A);
+
+            System.out.println("Fin de multiplication...");
+
+            // Creation des prédictions pour le fichier dev
+            List<int[]> fileLignes = CsvFile.chargeTest("dev.csv");
+
+            PredictFile ff = new PredictFile("dev.predict");
+            for (int[] binome : fileLignes) {
+                ff.add(Fin.get(binome[0],binome[1]));
+            }
+            ff.close();
+
+            // Creation des prédictions pour le fichier test
+            fileLignes = CsvFile.chargeTest("test.csv");
+
+            ff = new PredictFile("test.predict");
+            for (int[] binome : fileLignes) {
+                ff.add(Fin.get(binome[0],binome[1]));
+            }
+            ff.close();
+
+            System.out.println("Fini pour k = " + k + " :)");
+
+            PredictFile.zip("SVD moyenne G k=" + Integer.toString(k) + ".zip");
+
+            System.out.println("Et zippé");
+        }
         
         /*
         int k = 10;
@@ -94,30 +170,33 @@ public class ClasseDeTest {
                 moy_rest[i] = total;
             }
             
-            // Chargement des prédictions à faire
-            List<Integer[]> fileLignes = test.trainEvaluation();
             
-            for (Integer[] binome : fileLignes) {
-                test.add(moy_rest[binome[1]]);
+            // Test sur la méthode des moyennes
+            {
+                // Chargement des prédictions à faire
+                List<int[]> fileLignes = test.trainEvaluation();
+
+                for (int[] binome : fileLignes) {
+                    test.add(moy_rest[binome[1]]);
+                }
             }
             
-            
-            
-            
-            // On précalcule la moyenne de chaque clients
-            CollaborativeFiltering.moyenneClient = new double[3965];
-            for (int i = 0; i < 3965; i++) {
-                CollaborativeFiltering.moyenneClient[i] = CollaborativeFiltering.vote_moyen(train_data[i]);
+            // Test sur la méthode des k voisins
+            {
+                // On précalcule la moyenne de chaque clients
+                CollaborativeFiltering.moyenneClient = new double[3965];
+                for (int i = 0; i < 3965; i++) {
+                    CollaborativeFiltering.moyenneClient[i] = CollaborativeFiltering.vote_moyen(train_data[i]);
+                }
+
+                // Chargement des prédictions à faire
+                List<int[]> fileLignes = test.trainEvaluation();
+
+                for (int[] binome : fileLignes) {
+                    double note = CollaborativeFiltering.vote_pondere(train_data, binome[0], binome[1]);
+                    test.add((int) Math.round(note));
+                }
             }
-            
-            // Chargement des prédictions à faire
-            List<Integer[]> fileLignes = test.trainEvaluation();
-            
-            for (Integer[] binome : fileLignes) {
-                double note = CollaborativeFiltering.vote_pondere(train_data, binome[0], binome[1]);
-                test.add((int) Math.round(note));
-            }
-            
             
             
             
@@ -126,6 +205,7 @@ public class ClasseDeTest {
             System.out.println("On à fini le test n°" + tt);
         
             test.next();
+            
         }
         
         System.out.println(moyenne/k);

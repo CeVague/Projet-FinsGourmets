@@ -86,6 +86,35 @@ public class CsvFile {
 
         return tab;
     }
+    
+     /**
+     * Fonction de chargement des fichiers d'entrainements (client, restaurant,
+     * note) en une liste de notes.
+     *
+     * @param chemin le chemin vers le fichier (ou son nom si il est à la racine
+     * du projet java)
+     * @return un List<int[]> où le premier paramètre est le num client et le
+     * deuxième est le num du restaurant et le troisieme la note. Seul la
+     * dernière note du fichier est prise en compte (en cas de doublons).
+     */
+    public static List<int[]> chargeTrainList(String chemin) {
+        // Chargement des données (en enlevant les doublons)
+        int[][] tab = chargeTrain(chemin);
+            
+        // Futur liste des données
+        List<int[]> liste = new ArrayList<int[]>();
+
+        // On parcourt les lignes qu'on récupère une par une
+        for (int i=0;i<tab.length;i++) {
+            for(int j=0;j<tab[0].length;j++){
+                if(tab[i][j]!=0){
+                    liste.add(new int[]{i,j,tab[i][j]});
+                }
+            }
+        }
+
+        return liste;
+    }
 
     /**
      * Fonction de chargement des fichier de test (dev et test) (client,
