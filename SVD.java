@@ -75,16 +75,19 @@ public class SVD {
 		
 		for(int i=0;i<MFinal.getRowDimension();i++){
 			for(int j=0;j<k;j++){
-				double somme = 0;
-				for(int t=0;t<k;t++){
-					somme += U.get(i, k) * S.get(k, j);
-				}
-				MFinal.set(i, j, somme);
+				MFinal.set(i, j, U.get(i, j) * S.get(j, j));
 			}
 		}
 		
+		Matrix VTemp = new Matrix(k, V.getColumnDimension());
+
+		for(int i=0;i<k;i++){
+			for(int j=0;j<V.getColumnDimension();j++){
+				VTemp.set(i, j, V.get(i, j));
+			}
+		}		
 		
-		MFinal = MFinal.times(V);
+		MFinal = MFinal.times(VTemp);
 		
 		phase = 2;
 	}
