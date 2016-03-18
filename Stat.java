@@ -15,7 +15,7 @@ public class Stat {
 		}
 		return nb;
 	}
-	public static int valeur_présente(int[][] tab){
+	public static int valeur_presente(int[][] tab){
 		int nb=0;
 		for (int[] i:tab){
 			for (int j:i){
@@ -106,8 +106,8 @@ public class Stat {
                 
                 System.out.println("Il manque : "+valeur_manquante(tab)+("  valeurs dans la matrice sur "+(CsvFile.nb_clients*CsvFile.nb_restau)+" valeur en tout"));
                 System.out.println("Il manque : "+valeur_manquante(tab)*100/(CsvFile.nb_clients*CsvFile.nb_restau)+"% ");
-                System.out.println("On a "+valeur_présente(tab)+" valeur");
-                System.out.println("En moyenne chaque client a noté "+valeur_présente(tab)/CsvFile.nb_clients+" restaurants parmi "+CsvFile.nb_restau);
+                System.out.println("On a "+valeur_presente(tab)+" valeur");
+                System.out.println("En moyenne chaque client a noté "+valeur_presente(tab)/CsvFile.nb_clients+" restaurants parmi "+CsvFile.nb_restau);
 
                 //Creation des stats restau
                 int max=0;
