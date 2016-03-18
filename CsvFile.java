@@ -43,17 +43,17 @@ public class CsvFile {
     }
 
     /**
-     * Fonction de chargement des fichiers d'entrainements (client, restaurant,
-     * note) en un tableau de notes.
-     *
-     * Pas de note = 0.
-     *
-     * @param chemin le chemin vers le fichier (ou son nom si il est à la racine
-     * du projet java)
-     * @return un int[][] où le premier paramètre est le num client et le
-     * deuxième est le num du restaurant. Seul la dernière note du fichier est
-     * prise en compte (en cas de doublons).
-     */
+	 * Fonction de chargement des fichiers d'entrainements (client, restaurant,
+	 * note) en un tableau de notes.
+	 *
+	 * Pas de note = 0.
+	 *
+	 * @param chemin le chemin vers le fichier (ou son nom si il est à la racine
+	 *        du projet java)
+	 * @return un int[][] où le premier paramètre est le num client et le
+	 *         deuxième est le num du restaurant. Seul la dernière note du
+	 *         fichier est prise en compte (en cas de doublons).
+	 */
     public static int[][] chargeTrain(String chemin) {
         // tab représente notre matrice, les clients en lignes et les notes par restaurants en colonnes
         // Elle est initialisée par défaut avec des zeros partout

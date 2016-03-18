@@ -15,78 +15,78 @@ import java.util.zip.ZipOutputStream;
  */
 public class PredictFile {
 
-    private final String chemin;
-    private final List<Integer> liste;
-    
-    public PredictFile(String chemin) {
-        this.chemin = chemin;
-        liste = new ArrayList<Integer>();
-    }
+	private final String chemin;
+	private final List<Integer> liste;
 
-    public void add(int note) {
-        liste.add(note);
-    }
+	public PredictFile(String chemin) {
+		this.chemin = chemin;
+		liste = new ArrayList<Integer>();
+	}
 
-    public void add(double note) {
-        liste.add((int) Math.round(note));
-    }
+	public void add(int note) {
+		liste.add(note);
+	}
 
-    public void add(String note) {
-        liste.add(Integer.parseInt(note));
-    }
+	public void add(double note) {
+		liste.add((int) Math.round(note));
+	}
 
-    /**
-     * Ecrit tout ce qui a été ajouté à la classe dans le fichier
-     */
-    public void close() {
-        try {
-            File ff = new File(this.chemin);
-            ff.createNewFile();
-            FileWriter ffw = new FileWriter(ff);
+	public void add(String note) {
+		liste.add(Integer.parseInt(note));
+	}
 
-            // On écrit chaque note de la liste dans le fichier
-            for (Integer note : liste) {
-                ffw.write(note + "\n");
-            }
+	/**
+	 * Ecrit tout ce qui a été ajouté à la classe dans le fichier
+	 */
+	public void close() {
+		try {
+			File ff = new File(this.chemin);
+			ff.createNewFile();
+			FileWriter ffw = new FileWriter(ff);
 
-            ffw.close();
-        } catch (Exception e) {
-            System.out.println("Erreur lors de la création du fichier " + chemin);
-        }
-    }
+			// On écrit chaque note de la liste dans le fichier
+			for (Integer note : liste) {
+				ffw.write(note + "\n");
+			}
 
-    /**
-     * Crée le zip contenant dev.predict et test.predict
-     *
-     * @param nomZip le nom du fichier Zip que vous voulez créer
-     */
-    public static void zip(String nomZip) {
-        byte[] buffer = new byte[1024];
+			ffw.close();
+		} catch (Exception e) {
+			System.out.println("Erreur lors de la création du fichier " + chemin);
+		}
+	}
 
-        try {
+	/**
+	 * Crée le zip contenant dev.predict et test.predict
+	 *
+	 * @param nomZip le nom du fichier Zip que vous voulez créer
+	 */
+	public static void zip(String nomZip) {
+		byte[] buffer = new byte[1024];
 
-            FileOutputStream fos = new FileOutputStream(nomZip);
-            ZipOutputStream zos = new ZipOutputStream(fos);
+		try {
 
-            for (String nomTemp : new String[]{"dev.predict", "test.predict"}) {
+			FileOutputStream fos = new FileOutputStream(nomZip);
+			ZipOutputStream zos = new ZipOutputStream(fos);
 
-                ZipEntry ze = new ZipEntry(nomTemp);
-                zos.putNextEntry(ze);
-                FileInputStream in = new FileInputStream(nomTemp);
+			for (String nomTemp : new String[] { "dev.predict", "test.predict" }) {
 
-                int len;
-                while ((len = in.read(buffer)) > 0) {
-                    zos.write(buffer, 0, len);
-                }
+				ZipEntry ze = new ZipEntry(nomTemp);
+				zos.putNextEntry(ze);
+				FileInputStream in = new FileInputStream(nomTemp);
 
-                in.close();
-            }
+				int len;
+				while ((len = in.read(buffer)) > 0) {
+					zos.write(buffer, 0, len);
+				}
 
-            zos.closeEntry();
-            zos.close();
+				in.close();
+			}
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+			zos.closeEntry();
+			zos.close();
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 }
