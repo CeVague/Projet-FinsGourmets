@@ -1,18 +1,18 @@
 
-import  org.apache.hadoop.conf.Configuration;
- import  org.apache.hadoop.io.IntWritable;
- import  org.apache.hadoop.mapreduce.Job;
- import  org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
-import  org.apache.hadoop.mapreduce.lib.map.MultithreadedMapper;
- import  org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
- import  org.apache.hadoop.util.ToolRunner;
- import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable;
- import org.apache.mahout.common.AbstractJob;
-
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.map.MultithreadedMapper;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.ToolRunner;
+import org.apache.mahout.cf.taste.hadoop.RecommendedItemsWritable;
+import org.apache.mahout.common.AbstractJob;
 
 import java.util.List;
- import java.util.Map;
-public class Als {
+import java.util.Map;
+
+public class ALS {
 public static void main(String[] args){
         
         int[][] tabTemp = CsvFile.chargeTrain("train.csv");
@@ -89,4 +89,5 @@ public static void main(String[] args){
 
             System.out.println("Et zippé");
         }
+	}
 }

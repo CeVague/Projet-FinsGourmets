@@ -8,8 +8,8 @@ import weka.core.matrix.*;
 */
 public class ClasseDeTest {
     
-    //private final static int nb_restau = 1751;
-    //private final static int nb_clients = 3965;
+    private final static int nb_restau = 1751;
+    private final static int nb_clients = 3965;
     
     
     public static void main(String[] args){
@@ -73,7 +73,7 @@ public class ClasseDeTest {
         
         System.out.println("Sous matrices récupérés...");
         
-        for(int k=29;k>=1;k--){
+        for(int k=10;k>=5;k--){
             // On ne garde que les valeurs de S assez grandes
             for(int i=k;i<Math.min(S.getRowDimension(), S.getColumnDimension());i++){
                 S.set(i, i, 0);
