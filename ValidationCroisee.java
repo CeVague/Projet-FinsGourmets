@@ -17,7 +17,6 @@ public class ValidationCroisee {
 	private final int tailleDeK;
 
 	private int k;
-	private List<int[]> listeEvalTemp;
 	private List<Integer> listeNotes;
 
 	/*
@@ -78,7 +77,7 @@ public class ValidationCroisee {
 	 * Renvoie la liste des couples dont il faudra prédire les notes
 	 */
 	public List<int[]> trainEvaluation() {
-		listeEvalTemp = new ArrayList<int[]>();
+		List<int[]> listeEvalTemp = new ArrayList<int[]>();
 
 		for (int i = (k * tailleDeK); i < ((k + 1) * tailleDeK); i++) {
 			int[] temp = listeTrainTotal.get(i);
@@ -103,7 +102,7 @@ public class ValidationCroisee {
 		double resultat = 0;
 
 		for (int i = 0; i < listeNotes.size(); i++) {
-			int[] temp = listeEvalTemp.get(i);
+			int[] temp = listeTrainTotal.get(i);
 			resultat += Math.pow(listeNotes.get(i) - train_data[temp[0]][temp[1]], 2);
 		}
 
