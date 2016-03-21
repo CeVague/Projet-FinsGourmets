@@ -30,6 +30,25 @@ public class Melange {
 		// Création de la matrice pour la SVD
 		double[][] entrainementSVD = new double[h][l];
 		
+		
+		// Remplissage de la matrice avec les moyennes restaurants (l'algo sera bientot placé dans une classe à part)
+		double[] moy_rest = new double[l];
+		for (int i = 0; i < l; i++) {
+			double total = 0;double compt = 0;
+			for (int j = 0; j < h; j++)
+				if (entrainement[j][i] != 0) {
+					compt++;
+					total += entrainement[j][i];}
+			if (compt > 0) total = total / compt;
+			moy_rest[i] = total;
+		}
+		for (int i = 0; i < h; i++)
+			for (int j = 0; j < l; j++){
+				if (entrainement[i][j] == 0) entrainementSVD[i][j] = moy_rest[j];
+				else entrainementSVD[i][j] = entrainement[i][j];}
+		
+		
+		
 		SVD.initialiser(entrainementSVD);
 		
 		SVD.decomposer(10);
