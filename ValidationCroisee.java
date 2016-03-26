@@ -65,6 +65,7 @@ public class ValidationCroisee {
 			}
 		}
 
+		
 		for (int i = (k * tailleDeK); i < ((k + 1) * tailleDeK); i++) {
 			int[] temp = listeTrainTotal.get(i);
 			retour[temp[0]][temp[1]] = 0;
@@ -102,7 +103,7 @@ public class ValidationCroisee {
 		double resultat = 0;
 
 		for (int i = 0; i < listeNotes.size(); i++) {
-			int[] temp = listeTrainTotal.get(i);
+			int[] temp = listeTrainTotal.get(i + (k * tailleDeK));
 			resultat += Math.pow(listeNotes.get(i) - train_data[temp[0]][temp[1]], 2);
 		}
 
