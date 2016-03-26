@@ -25,42 +25,32 @@ public class Melange {
 
 		System.out.println("Lancement des différents algorythmes :");
 
+		System.out.print("Moyenne...");
+		
+		Moyenne.initialisation(entrainement);
+		
+		double[][] resultatMoyenne = Moyenne.completeMatrix();
+		
+		System.out.println("Fait");
 
 		System.out.print("SVD...");
 		// Création de la matrice pour la SVD
 		double[][] entrainementSVD = new double[h][l];
 
-
-		// Remplissage de la matrice avec les moyennes restaurants (l'algo sera
-		// bientot placé dans une classe à part)
-		double[] moy_rest = new double[l];
-		for (int i = 0; i < l; i++) {
-			double total = 0;
-			double compt = 0;
-			for (int j = 0; j < h; j++)
-				if (entrainement[j][i] != 0) {
-					compt++;
-					total += entrainement[j][i];
-				}
-			if (compt > 0)
-				total = total / compt;
-			moy_rest[i] = total;
-		}
-		for (int i = 0; i < h; i++)
+		for (int i = 0; i < h; i++){
 			for (int j = 0; j < l; j++) {
 				if (entrainement[i][j] == 0)
-					entrainementSVD[i][j] = moy_rest[j];
+					entrainementSVD[i][j] = resultatMoyenne[i][j];
 				else
 					entrainementSVD[i][j] = entrainement[i][j];
 			}
-
+		}
 
 		SVD.initialiser(entrainementSVD);
 
 		SVD.decomposer(10);
 
 		System.out.println("Fait");
-
 
 		// 300 -> 250
 		// 10000 -> 500000
@@ -73,19 +63,28 @@ public class Melange {
 		// 30000 -> 20000
 		// 20, 20 -> 20, 18
 
-
 		System.out.print("SGD...");
+		
+		double[][] entrainementSGD = new double[h][l];
+		
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < l; j++) {
+				if (entrainement[i][j] != 0)
+					entrainementSGD[i][j] = entrainement[i][j];
+			}
+		}
+		
 		for (int t = 0; t < 20000; t++) {
 			int i = (int) (Math.random() * h);
 			int j = (int) (Math.random() * l);
+			
 			if (entrainement[i][j] == 0)
-				entrainement[i][j] = (int) Math.round(SVD.get(i, j));
+				entrainementSGD[i][j] = resultatMoyenne[i][j];
 		}
 
-
 		SGD.facteurs(0.0002, 0.1, 20, 20, 250);
-		double[][] fin = SGD.lance(entrainement);
-
+		
+		double[][] resultatSGD = SGD.lance(entrainementSGD);
 
 		System.out.println("Fait");
 
@@ -105,7 +104,7 @@ public class Melange {
 				System.out.print(".");
 
 			for (int j = 0; j < l; j++) {
-				matriceFinale[i][j] = fin[i][j];
+				matriceFinale[i][j] = resultatSGD[i][j];
 			}
 		}
 
@@ -136,7 +135,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange.zip");
+		PredictFile.zip("Melange Moyenne+SGD.zip");
 
 		System.out.println("Travail accomplit.");
 	}

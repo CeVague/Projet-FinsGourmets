@@ -3,11 +3,11 @@ import java.util.List;
 
 public class SGD {
 
-	public static double[][] U, V;
-	public static int h, l, factK = 11, nb = 10, iterations = 310;
+	private static double[][] U, V;
+	private static int h, l, factK = 11, nb = 10, iterations = 310;
 	private static double alpha = 0.0002, beta = 0.1;
 
-	public static double multSimple(int i, int j) {
+	private static double multSimple(int i, int j) {
 		double somme = 0.0;
 
 		for (int K = 0; K < factK; K++) {
@@ -17,7 +17,7 @@ public class SGD {
 		return somme;
 	}
 
-	public static double[][] multTout() {
+	private static double[][] multTout() {
 		double[][] matrice = new double[h][l];
 
 		for (int i = 0; i < h; i++) {
@@ -32,7 +32,15 @@ public class SGD {
 
 		return matrice;
 	}
-        
+    
+	/**
+	 * Pour initialiser les différents facteurs de cet algorythme
+	 * @param a le taux d'apprentissage
+	 * @param b un autre taux évitant le sur apprentissage
+	 * @param k la taille k des matrices U et V
+	 * @param n le nombre de prédictions à moyenner
+	 * @param i le nombre d'itération du calcul de gradient
+	 */
 	public static void facteurs(double a, double b, int k, int n, int i){
 		alpha = a;
 		beta = b;
@@ -41,7 +49,7 @@ public class SGD {
 		iterations = i;
 	}
 	
-	public static double[][] factorisation(List<int[]> M,int H, int L) {
+	private static double[][] factorisation(List<double[]> M, int H, int L) {
 		h = H;
 		l = L;
 		
@@ -58,9 +66,9 @@ public class SGD {
 
 
 		for(int rien=0;rien<iterations;rien++) {
-			for(int[] d : M){
-				int i = d[0];
-				int j = d[1];
+			for(double[] d : M){
+				int i = (int) d[0];
+				int j = (int) d[1];
 				double eij = d[2] - multSimple(i, j);
 				for (int K = 0; K < factK; K++) {
 					U[i][K] += alpha * (2 * eij * V[K][j] - beta * U[i][K]);
@@ -73,21 +81,40 @@ public class SGD {
 		
 		//System.out.println("U et V ont étés trouvés");
 		
-		//System.out.print(".");
-		
 		return multTout();
 	}
 	
-	
+	/**
+	 * Lancement de la SGD
+	 * @param table la matrice creuse
+	 * @return une matrice pleine
+	 */
 	public static double[][] lance(int[][] table){
+		double[][] d = new double[table.length][table[0].length];
+		
+		for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[0].length; j++){
+            	d[i][j] = table[i][j];
+            }
+        }
+		
+		return lance(d);
+	}
+	
+	/**
+	 * Lancement de la SGD
+	 * @param table la matrice creuse
+	 * @return une matrice pleine
+	 */
+	public static double[][] lance(double[][] table){
 
 		// Initialise la table de train
-		List<int[]> train = new ArrayList<int[]>();
+		List<double[]> train = new ArrayList<double[]>();
 		
 		for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
                 if (table[i][j]!=0) {
-                    train.add(new int[]{i, j, table[i][j]});
+                    train.add(new double[]{i, j, table[i][j]});
                 }
             }
         }
