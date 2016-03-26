@@ -8,74 +8,82 @@ public class Moyenne {
 	/**
 	Fonction qui calcule la note moyenne qu'a obtenu un restaurant
 	@param restau l'indice indentifiant le restaurant dont on souhaite
-	calculer la moyenne, mat une matrice de données fournis par chargeTrain
+	calculer la moyenne, mat une matrice de donnï¿½es fournis par chargeTrain
 	de la classe CsvFile.
 	@return Retourne la moyenne, et 0 si que des 0.
 	**/
-	public static int moyenne_restau(int restau, int[][] mat) {
-		int count = 0;
-		int sum = 0;
+	public static double moyenne_restau(int restau, int[][] mat) {
+		double count = 0;
+		double sum = 0;
 		
 		for (int i=0; i < mat.length; i++) {
-			for (int j=0; j < mat[i].length; j++) {
-				if (j == restau && mat[i][j] != 0) {
-					count++;
-					sum += mat[i][j];
-				}
+			if (mat[i][restau] != 0) {
+				count++;
+				sum += mat[i][restau];
 			}
-		}		
+		}
+		
 		if (count !=0 ) {
 			return sum/count;
-		} else { return 0; }
+		}
+		
+		return 0;
 	}
 	
 	/**
-	Fonction qui calcule la moyenne des notes qu'a donné un certain 
-	client
+	Fonction qui calcule la moyenne des notes qu'a donnï¿½ un client
 	@param client l'indice identifiant le client, mat une matrice de 
-	données fournis par chargeTrain de la classe CsvFile.
+	donnï¿½es fournis par chargeTrain de la classe CsvFile.
 	@return La moyenne.
 	**/
-	public static int moyenne_client(int client, int[][] mat) {
-		int count = 0;
-		int sum = 0;
+	public static double moyenne_client(int client, int[][] mat) {
+		double count = 0;
+		double sum = 0;
 		
-		for (int i=0; i < mat.length; i++) {
-			for (int j=0; j < mat[i].length; j++) {
-				if (i == client && mat[i][j] != 0) {
-					count++;
-					sum += mat[i][j];
-				}
+		for (int j=0; j < mat[0].length; j++) {
+			if (mat[client][j] != 0) {
+				count++;
+				sum += mat[client][j];
 			}
-		}		
+		}
+	
 		if (count !=0 ) {
 			return sum/count;
-		} else { return 0; }
+		}
+		
+		return 0;
 	}
 	
 	/**
 	 * Fonction qui complete une matrice creuse en remplacant les 0 par 
-	 * la moyenne de la moyenne des notes recu par le restaurant et donnée
+	 * la moyenne de la moyenne des notes recu par le restaurant et donnï¿½e
 	 * par le client
-	 * @param mat une matrice fournis par chargement des données en utilisant
+	 * @param mat une matrice fournis par chargement des donnï¿½es en utilisant
 	 * la classe CsvFile
 	 * @return Retourne une matrice remplie
 	 * **/
 	public static int[][] completeMatrix(int[][] mat) {
 		for (int i=0; i < mat.length; i++) {
+			double moyClient = moyenne_client(i, mat);
+			
 			for (int j=0; j < mat[i].length; j++) {
 				if (mat[i][j]==0) {
 					//System.out.println("["+i+"]"+"["+j+"] remplis");
 						
-					System.out.println( (i*100)/1751+" % complete");
-					int moyClient = moyenne_client(i, mat);
-					int moyRestau = moyenne_restau(j, mat);
-					mat[i][j] = ( moyClient + moyRestau ) /2;
+					double moyRestau = moyenne_restau(j, mat);
+					mat[i][j] =(int) Math.round(( moyClient + moyRestau ) /2);
 				}
 			}
+			
+			if(i%40==0)
+				System.out.println( (i*100)/mat.length+" % complete");
 		}
 		
 		return mat;
+	}
+	
+	public static double get(int i, int j, int[][] mat){
+		return ( moyenne_client(i, mat) + moyenne_restau(j, mat) ) /2;
 	}
 	
 	public static void main(String[] args) {
@@ -83,7 +91,7 @@ public class Moyenne {
 		int[][] mat = CsvFile.chargeTrain("train.csv");
 		int[][] finalMat = completeMatrix(mat);
 		
-		//System.out.print(mat[125][15]);
+		System.out.print(finalMat[125][15]);
 		
 		
 	}
