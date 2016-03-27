@@ -1,7 +1,8 @@
+
 public class Moyenne {
 
-	private static double[] moy_restau;
-	private static double[] moy_client;
+	public static double[] moy_restau;
+	public static double[] moy_client;
 	private static boolean init = false;
 
 	/**
@@ -69,7 +70,17 @@ public class Moyenne {
 					// System.out.println("["+i+"]"+"["+j+"] remplis");
 
 					double moyRestau = moyenne_restau(j, mat);
-					mat[i][j] = (int) Math.round((moyClient + moyRestau) / 2);
+					
+					// Pour gérer en cas de ligne ou colonne vide
+					if(moyClient==0 && moyRestau==0){
+						mat[i][j] = 4;
+					}else if(moyClient==0){
+						mat[i][j] = (int) Math.round(moyRestau);
+					}else if(moyRestau==0){
+						mat[i][j] = (int) Math.round(moyClient);
+					}else{
+						mat[i][j] = (int) Math.round((moyClient + moyRestau) / 2);
+					}
 				}
 			}
 
@@ -125,7 +136,7 @@ public class Moyenne {
 	 * 
 	 * @return la matrice toute remplis
 	 */
-	public static double[][] completeMatrix() {
+	public static double[][] matrix() {
 		// Vérifie que moy_client et moy_restau ont bien été initialisés
 		if (!init) {
 			System.out.println("Erreur : matrice non initialisée.");
@@ -137,7 +148,19 @@ public class Moyenne {
 		// Remplis la matrice en combinant les deux moyennes
 		for (int i = 0; i < mat.length; i++) {
 			for (int j = 0; j < mat[0].length; j++) {
-				mat[i][j] = (moy_client[i] + moy_restau[j]) / 2;
+				double moyClient = moy_client[i];
+				double moyRestau = moy_restau[j];
+				
+				// Pour gérer en cas de ligne ou colonne vide
+				if(moyClient==0 && moyRestau==0){
+					mat[i][j] = 3.86162719;
+				}else if(moyClient==0){
+					mat[i][j] = moyRestau;
+				}else if(moyRestau==0){
+					mat[i][j] = moyClient;
+				}else{
+					mat[i][j] = (moyClient + moyRestau) / 2;
+				}
 			}
 		}
 
@@ -171,7 +194,7 @@ public class Moyenne {
 		 */
 
 		initialisation(mat);
-		completeMatrix();
+		matrix();
 
 	}
 

@@ -101,4 +101,8 @@ public class SVD {
 
 		return MFinal.get(i, j);
 	}
+	
+	public static double[][] matrix() {
+		return MFinal.getArray();
+	}
 }
