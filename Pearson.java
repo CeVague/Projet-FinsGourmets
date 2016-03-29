@@ -11,7 +11,7 @@ public class Pearson {
 
         for (int i = 0; i < tab.length; i++) {
 
-        	double moy = 3.86162719;
+        	double moy = Moyenne.moy_total;
         	
             if (tab[i] != 0) {
                 double val = Moyenne.moy_restau[i] - moy;
@@ -62,7 +62,7 @@ public class Pearson {
 
         for (int i = 0; i < tab.length; i++) {
 
-        	double moy = 3.86162719;
+        	double moy = Moyenne.moy_total;
         	
             if (tab[i] != 0) {
                 double val = Moyenne.moy_client[i] - moy;
@@ -105,9 +105,9 @@ public class Pearson {
         return vp;
     }
     
-    public static void initialisation(int[][] base){
+    public static void initialiser(int[][] base){
     	// Initialisation de la moyenne
-		Moyenne.initialisation(base);
+		Moyenne.initialiser(base);
 		train = Moyenne.matrix();
     	
     	
@@ -136,7 +136,7 @@ public class Pearson {
             	}
             }
             
-            if(nb>75)
+            if(nb>140)
             	coefClient[i] = similarite_restaurant(tab, i);
     	}
     	
@@ -154,7 +154,7 @@ public class Pearson {
             	}
             }
     		
-            if(nb>110)
+            if(nb>250)
             	coefRestau[i] = similarite_client(tab, i);
     	}
     }

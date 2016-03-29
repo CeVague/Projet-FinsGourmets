@@ -3,8 +3,28 @@ public class Moyenne {
 
 	public static double[] moy_restau;
 	public static double[] moy_client;
+	public static double moy_total;
 	private static boolean init = false;
 
+	public static double moyenne_total(int[][] mat) {
+		double count = 0;
+		double sum = 0;
+
+		for (int i = 0; i < mat.length; i++) {
+			for(int j=0;j<mat[0].length;j++){
+				if (mat[i][j] != 0) {
+					count++;
+					sum += mat[i][j];
+				}
+			}
+		}
+
+		if (count != 0) { return sum / count; }
+
+		return 0;
+	}
+	
+	
 	/**
 	 * Fonction qui calcule la note moyenne qu'a obtenu un restaurant
 	 * 
@@ -112,9 +132,11 @@ public class Moyenne {
 	 * 
 	 * @param mat la matrice sur laquelle on souhaite travailler
 	 */
-	public static void initialisation(int[][] mat) {
+	public static void initialiser(int[][] mat) {
 		moy_restau = new double[mat[0].length];
 		moy_client = new double[mat.length];
+		
+		moy_total = moyenne_total(mat);
 
 		// Enregistre la moyenne de chaque restaurant
 		for (int i = 0; i < moy_restau.length; i++) {
@@ -153,7 +175,7 @@ public class Moyenne {
 				
 				// Pour gérer en cas de ligne ou colonne vide
 				if(moyClient==0 && moyRestau==0){
-					mat[i][j] = 3.86162719;
+					mat[i][j] = Moyenne.moy_total;
 				}else if(moyClient==0){
 					mat[i][j] = moyRestau;
 				}else if(moyRestau==0){
@@ -193,7 +215,7 @@ public class Moyenne {
 		 * System.out.print(finalMat[125][15]);
 		 */
 
-		initialisation(mat);
+		initialiser(mat);
 		matrix();
 
 	}

@@ -163,7 +163,7 @@ public class Melange {
 		
 		System.out.print("Moyenne...");
 		
-		Moyenne.initialisation(entrainement);
+		Moyenne.initialiser(entrainement);
 		
 		double[][] resultatMoyenne = Moyenne.matrix();
 		
@@ -172,7 +172,7 @@ public class Melange {
 		
 		System.out.print("Pearson...");
 		
-		Pearson.initialisation(entrainement);
+		Pearson.initialiser(entrainement);
 		
 		double[][] resultatPearson = Pearson.matrix();
 		
