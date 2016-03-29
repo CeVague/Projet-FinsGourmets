@@ -30,7 +30,7 @@ public class Melange {
 		}
 	}
 	
-	private static int[][] validite(int[][] m){
+	private static int[][] validite(int[][] m, int min){
 		int[][] f = new int[h][l];
 		int[] nbC = new int[h];
 		int[] nbR = new int[l];
@@ -73,7 +73,7 @@ public class Melange {
 		int n = 0;
 		int rang = 1;
 		
-		while(n<20500){
+		while(n<min){
 			int max = 0;
 			
 			for(int i=0;i<h;i++){
@@ -151,7 +151,7 @@ public class Melange {
 		System.out.print("Calcul des valeurs les plus fiables...");
 		
 		// Tableau de valeur (plus elle est grande, plus la prédiction est juste)
-		int[][] fiabilite = validite(entrainement);
+		int[][] fiabilite = validite(entrainement, 50001);
 
 		System.out.println("Fait");
 		
@@ -191,13 +191,13 @@ public class Melange {
 		System.out.print("SVD...");
 		// Création de la matrice pour la SVD
 		// On reprend la matrice (que l'on a borné)
-		double[][] entrainementSVD = bornage(resultatPearson);
+		double[][] entrainementSVD = bornage(resultatMoyenneRegularise);
 		// On y remet les valeurs de l'ensemble d'entrainement
 		reRemplissage(entrainementSVD, donneeValides);
 		// Et on lance l'algo
 		SVD.initialiser(entrainementSVD);
 
-		SVD.decomposer(12);
+		SVD.decomposer(3);
 
 		System.out.println("Fait");
 		
@@ -205,7 +205,9 @@ public class Melange {
 		System.out.print("SGD...");
 
 		// Remplissage avec les notes les plus certaines
-		double[][] entrainementSGD = remplissageFiable(resultatMoyenne, entrainement, fiabilite, 5000);
+		// double[][] entrainementSGD = remplissageFiable(resultatMoyenne, entrainement, fiabilite, 5000);
+		double[][] entrainementSGD = new double[h][l];
+		reRemplissage(entrainementSGD, donneeValides);
 
 		// Remplissage random
 		for(int a=0;a<15000;a++){
@@ -213,7 +215,7 @@ public class Melange {
 			int j = (int) (Math.random() * l);
 			
 			if(entrainementSGD[i][j] == 0){
-				entrainementSGD[i][j] = resultatMoyenne[i][j];
+				entrainementSGD[i][j] = resultatPearson[i][j];
 			}else{
 				a--;
 			}
@@ -241,7 +243,14 @@ public class Melange {
 				System.out.print(".");
 
 			for (int j = 0; j < l; j++) {
-				matriceFinale[i][j] = (resultatMoyenne[i][j] + SVD.get(i, j) + resultatSGD[i][j])/3;
+				double faibleFiabilite = (0*resultatMoyenne[i][j] + 2*resultatPearson[i][j] +  2*resultatMoyenneRegularise[i][j]
+											+ 3*SVD.get(i, j) + 5*resultatSGD[i][j])/13;
+				
+				double hauteFiabilite = (1*resultatMoyenne[i][j] + 1*resultatPearson[i][j] +  1*resultatMoyenneRegularise[i][j]
+											+ 2*SVD.get(i, j) + 2*resultatSGD[i][j])/7;
+
+				
+				matriceFinale[i][j] = faibleFiabilite * (fiabilite[i][j]/50001) + hauteFiabilite * (1 - (fiabilite[i][j]/50001));
 			}
 		}
 
@@ -272,7 +281,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange SVD(pers,12)+Moy+SGD(Moy,20000).zip");
+		PredictFile.zip("Melange 02235 11122.zip");
 
 		System.out.println("Travail accomplit.");
 	}

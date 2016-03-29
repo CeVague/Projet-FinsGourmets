@@ -57,10 +57,10 @@ public class SGD {
 		V = new double[factK][l];
 		for (int K = 0; K < factK; K++) {
             for (int i = 0; i < h; i++) {
-            	U[i][K] = Math.random();
+            	U[i][K] = (Math.random() * 0.7) + 0.1;
             }
             for (int i = 0; i < l; i++) {
-                V[K][i] = Math.random();
+                V[K][i] = (Math.random() * 0.7) + 0.1;
             }
 		}
 
