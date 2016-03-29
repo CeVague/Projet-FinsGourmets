@@ -73,7 +73,7 @@ public class Melange {
 		int n = 0;
 		int rang = 1;
 		
-		while(n<40000){
+		while(n<20500){
 			int max = 0;
 			
 			for(int i=0;i<h;i++){
@@ -179,6 +179,15 @@ public class Melange {
 		System.out.println("Fait");
 		
 		
+		System.out.print("MoyenneRegularise...");
+		
+		MoyenneRegularise.initialiser(entrainement, 14, 8);
+		
+		double[][] resultatMoyenneRegularise = MoyenneRegularise.matrix();
+		
+		System.out.println("Fait");
+		
+		
 		System.out.print("SVD...");
 		// Création de la matrice pour la SVD
 		// On reprend la matrice (que l'on a borné)
@@ -191,26 +200,26 @@ public class Melange {
 		SVD.decomposer(12);
 
 		System.out.println("Fait");
-
 		
-		// 300 -> 250
-		// 10000 -> 500000
-		// 10000 -> 20000
-		// 20000 -> 40000
-		// 20, 20 -> 18, 20
-		// 18, 20 -> 22, 20
-		// 22, 20 -> 20, 20
-		// 40000 -> 30000
-		// 30000 -> 20000
-		// 20, 20 -> 20, 18
 
 		System.out.print("SGD...");
 
-		double[][] entrainementSGD = remplissageFiable(resultatMoyenne, entrainement, fiabilite, 20000);
+		// Remplissage avec les notes les plus certaines
+		double[][] entrainementSGD = remplissageFiable(resultatMoyenne, entrainement, fiabilite, 5000);
 
+		// Remplissage random
+		for(int a=0;a<15000;a++){
+			int i = (int) (Math.random() * h);
+			int j = (int) (Math.random() * l);
+			
+			if(entrainementSGD[i][j] == 0){
+				entrainementSGD[i][j] = resultatMoyenne[i][j];
+			}else{
+				a--;
+			}
+		}
 
-		// 300 -> 250 si au dessus décommenté
-		SGD.facteurs(0.0002, 0.1, 20, 20, 250);
+		SGD.facteurs(0.0002, 0.1, 20, 40, 300);
 		
 		double[][] resultatSGD = SGD.lance(entrainementSGD);
 
