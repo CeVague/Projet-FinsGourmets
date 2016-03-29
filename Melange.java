@@ -151,7 +151,8 @@ public class Melange {
 		System.out.print("Calcul des valeurs les plus fiables...");
 		
 		// Tableau de valeur (plus elle est grande, plus la prédiction est juste)
-		int[][] fiabilite = validite(entrainement, 50001);
+		int nbFiable = 38000;
+		int[][] fiabilite = validite(entrainement, nbFiable);
 
 		System.out.println("Fait");
 		
@@ -250,7 +251,7 @@ public class Melange {
 											+ 2*SVD.get(i, j) + 2*resultatSGD[i][j])/7;
 
 				
-				matriceFinale[i][j] = faibleFiabilite * (fiabilite[i][j]/50001) + hauteFiabilite * (1 - (fiabilite[i][j]/50001));
+				matriceFinale[i][j] = faibleFiabilite * (fiabilite[i][j]/nbFiable) + hauteFiabilite * (1 - (fiabilite[i][j]/nbFiable));
 			}
 		}
 
@@ -281,7 +282,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange 02235 11122.zip");
+		PredictFile.zip("Melange 02235 11122 " + nbFiable + " 15000sgd.zip");
 
 		System.out.println("Travail accomplit.");
 	}
