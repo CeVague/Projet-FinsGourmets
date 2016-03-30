@@ -244,11 +244,11 @@ public class Melange {
 				System.out.print(".");
 
 			for (int j = 0; j < l; j++) {
-				double faibleFiabilite = (0*resultatMoyenne[i][j] + 2*resultatPearson[i][j] +  2*resultatMoyenneRegularise[i][j]
-											+ 3*SVD.get(i, j) + 5*resultatSGD[i][j])/13;
+				double faibleFiabilite = (1*resultatMoyenne[i][j] + 1*resultatPearson[i][j] +  1*resultatMoyenneRegularise[i][j]
+						+ 2*SVD.get(i, j) + 2*resultatSGD[i][j])/7;
 				
-				double hauteFiabilite = (1*resultatMoyenne[i][j] + 1*resultatPearson[i][j] +  1*resultatMoyenneRegularise[i][j]
-											+ 2*SVD.get(i, j) + 2*resultatSGD[i][j])/7;
+				double hauteFiabilite = (0*resultatMoyenne[i][j] + 1*resultatPearson[i][j] +  2*resultatMoyenneRegularise[i][j]
+						+ 2*SVD.get(i, j) + 3*resultatSGD[i][j])/8;
 
 				
 				matriceFinale[i][j] = faibleFiabilite * (fiabilite[i][j]/nbFiable) + hauteFiabilite * (1 - (fiabilite[i][j]/nbFiable));
@@ -282,7 +282,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange 02235 11122 " + nbFiable + " 15000sgd.zip");
+		PredictFile.zip("Melange 11122 01223 " + nbFiable + " 15000sgd.zip");
 
 		System.out.println("Travail accomplit.");
 	}
