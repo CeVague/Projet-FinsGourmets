@@ -1,18 +1,25 @@
 
-
 public class MoyenneRegularise {
+
 	public static double[] moy_restau;
 	public static double[] moy_client;
 	public static double moy_total;
 	private static boolean init = false;
 	private static double betaClient, betaRestau;
 
+	/**
+	 * Fonction qui calcule la note moyenne de toutes les notes
+	 * 
+	 * @param mat une matrice de donn�es fournis par chargeTrain de la classe
+	 *            CsvFile.
+	 * @return la moyenne calculée
+	 */
 	public static double moyenne_total(int[][] mat) {
 		double count = 0;
 		double sum = 0;
 
 		for (int i = 0; i < mat.length; i++) {
-			for(int j=0;j<mat[0].length;j++){
+			for (int j = 0; j < mat[0].length; j++) {
 				if (mat[i][j] != 0) {
 					count++;
 					sum += mat[i][j];
@@ -20,11 +27,13 @@ public class MoyenneRegularise {
 			}
 		}
 
-		if (count != 0) { return sum / count; }
+		if (count != 0) {
+			return sum / count;
+		}
 
 		return 0;
 	}
-	
+
 	/**
 	 * Fonction qui calcule la moyenne des notes qu'a donn� un client
 	 * 
@@ -44,11 +53,13 @@ public class MoyenneRegularise {
 			}
 		}
 
-		if (count != 0) { return sum / (count + betaClient); }
+		if (count != 0) {
+			return sum / (count + betaClient);
+		}
 
 		return 0;
 	}
-	
+
 	/**
 	 * Fonction qui calcule la note moyenne qu'a obtenu un restaurant
 	 * 
@@ -69,13 +80,15 @@ public class MoyenneRegularise {
 			}
 		}
 
-		if (count != 0) { return sum / (count + betaRestau); }
+		if (count != 0) {
+			return sum / (count + betaRestau);
+		}
 
 		return 0;
 	}
 
 	/**
-	 * Initialisation de la classe (indispensable pour utiilser completeMatrix()
+	 * Initialisation de la classe (indispensable pour utiliser completeMatrix()
 	 * et get(int i, int j))
 	 * 
 	 * @param mat la matrice sur laquelle on souhaite travailler
@@ -83,10 +96,10 @@ public class MoyenneRegularise {
 	public static void initialiser(int[][] mat, double bC, double bR) {
 		betaClient = bC;
 		betaRestau = bR;
-		
+
 		moy_restau = new double[mat[0].length];
 		moy_client = new double[mat.length];
-		
+
 		moy_total = moyenne_total(mat);
 
 		// Enregistre la moyenne de chaque restaurant
@@ -104,6 +117,33 @@ public class MoyenneRegularise {
 	}
 
 	/**
+	 * Crée la matrices des combinaisons des deux moyennes si la classe à bien
+	 * été initialisées
+	 * 
+	 * @return la matrice toute remplis
+	 */
+	public static double[][] matrix() {
+		// Vérifie que moy_client et moy_restau ont bien été initialisés
+		if (!init) {
+			System.out.println("Erreur : matrice non initialisée.");
+			return new double[0][0];
+		}
+
+		double[][] mat = new double[moy_client.length][moy_restau.length];
+
+		// Remplis la matrice en combinant les moyennes
+		// Inutile de prendre en compte les cas où un client ou un restaurant n'a
+		// pas de note, il est géré par défaut
+		for (int i = 0; i < mat.length; i++) {
+			for (int j = 0; j < mat[0].length; j++) {
+				mat[i][j] = (moy_total + moy_client[i] + moy_restau[j]);
+			}
+		}
+
+		return mat;
+	}
+	
+	/**
 	 * Renvoie la valeur de la moyenne pour un client et un restaurant précis si
 	 * la classe est bien initialisés
 	 * 
@@ -120,42 +160,17 @@ public class MoyenneRegularise {
 		return (moy_total + moy_client[i] + moy_restau[j]);
 	}
 
-	/**
-	 * Crée la matrices des combinaisons des deux moeyennes si la classe à bien
-	 * été initialisées
-	 * 
-	 * @return la matrice toute remplis
-	 */
-	public static double[][] matrix() {
-		// Vérifie que moy_client et moy_restau ont bien été initialisés
-		if (!init) {
-			System.out.println("Erreur : matrice non initialisée.");
-			return new double[moy_client.length][moy_restau.length];
-		}
 
-		double[][] mat = new double[moy_client.length][moy_restau.length];
-
-		// Remplis la matrice en combinant les deux moyennes
-		for (int i = 0; i < mat.length; i++) {
-			for (int j = 0; j < mat[0].length; j++) {
-				mat[i][j] = (moy_total + moy_client[i] + moy_restau[j]);
-			}
-		}
-
-		return mat;
-	}
-
+	// Si vous voulez tester cette classe, décommentez ce main
+	
+	/*
 	public static void main(String[] args) {
 
 		int[][] mat = CsvFile.chargeTrain("train.csv");
-
-		/*
-		 * int[][] finalMat = completeMatrix(mat);
-		 * System.out.print(finalMat[125][15]);
-		 */
 
 		initialiser(mat, 25, 25);
 		matrix();
 
 	}
+	*/
 }

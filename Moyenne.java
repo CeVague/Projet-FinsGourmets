@@ -6,12 +6,21 @@ public class Moyenne {
 	public static double moy_total;
 	private static boolean init = false;
 
+	/**
+	 * Fonction qui calcule la note moyenne de toutes les notes
+	 * 
+	 * @param mat une matrice de donn�es fournis par chargeTrain de la classe
+	 *            CsvFile.
+	 * @return la moyenne calculée
+	 */
 	public static double moyenne_total(int[][] mat) {
 		double count = 0;
 		double sum = 0;
 
+		// On parcourt toute la matrice
 		for (int i = 0; i < mat.length; i++) {
-			for(int j=0;j<mat[0].length;j++){
+			for (int j = 0; j < mat[0].length; j++) {
+				// Et on somme toutes les valeurs (pour les diviser ensuite)
 				if (mat[i][j] != 0) {
 					count++;
 					sum += mat[i][j];
@@ -19,12 +28,14 @@ public class Moyenne {
 			}
 		}
 
-		if (count != 0) { return sum / count; }
+		if (count != 0) {
+			return sum / count;
+		}
 
 		return 0;
 	}
-	
-	
+
+
 	/**
 	 * Fonction qui calcule la note moyenne qu'a obtenu un restaurant
 	 * 
@@ -38,6 +49,7 @@ public class Moyenne {
 		double count = 0;
 		double sum = 0;
 
+		// On parcourt tous les clients
 		for (int i = 0; i < mat.length; i++) {
 			if (mat[i][restau] != 0) {
 				count++;
@@ -45,8 +57,10 @@ public class Moyenne {
 			}
 		}
 
-		if (count != 0) { return sum / count; }
-
+		if (count != 0) {
+			return sum / count;
+		}
+		
 		return 0;
 	}
 
@@ -62,6 +76,7 @@ public class Moyenne {
 		double count = 0;
 		double sum = 0;
 
+		// On parcourt tous les restaurants
 		for (int j = 0; j < mat[0].length; j++) {
 			if (mat[client][j] != 0) {
 				count++;
@@ -69,75 +84,28 @@ public class Moyenne {
 			}
 		}
 
-		if (count != 0) { return sum / count; }
-
+		if (count != 0) {
+			return sum / count;
+		}
+		
 		return 0;
 	}
 
 	/**
-	 * Fonction qui complete une matrice creuse en remplacant les 0 par la
-	 * moyenne des notes recu par le restaurant et donn�es par le client.
-	 * 
-	 * @param mat une matrice creuse que l'on veux remplir.
-	 * @return retourne la matrice remplie.
-	 **/
-	public static int[][] completeMatrix(int[][] mat) {
-		for (int i = 0; i < mat.length; i++) {
-			double moyClient = moyenne_client(i, mat);
-
-			for (int j = 0; j < mat[0].length; j++) {
-				if (mat[i][j] == 0) {
-					// System.out.println("["+i+"]"+"["+j+"] remplis");
-
-					double moyRestau = moyenne_restau(j, mat);
-					
-					// Pour gérer en cas de ligne ou colonne vide
-					if(moyClient==0 && moyRestau==0){
-						mat[i][j] = 4;
-					}else if(moyClient==0){
-						mat[i][j] = (int) Math.round(moyRestau);
-					}else if(moyRestau==0){
-						mat[i][j] = (int) Math.round(moyClient);
-					}else{
-						mat[i][j] = (int) Math.round((moyClient + moyRestau) / 2);
-					}
-				}
-			}
-
-			if (i % 40 == 0)
-				System.out.println((i * 100) / mat.length + " % complete");
-		}
-
-		System.out.println("100 % complete");
-
-		return mat;
-	}
-
-	/**
-	 * Fonction qui permet de récuperer la moyenne entre la moyenne d'un client
-	 * et d'un restaurant
-	 * 
-	 * @param i l'incide du client
-	 * @param j l'indice du restaurant
-	 * @param mat la matrice à utiliser pour creer les valeurs
-	 * @return la moyenne entre la moyenne client et restaurant
-	 */
-	public static double get(int i, int j, int[][] mat) {
-		return (moyenne_client(i, mat) + moyenne_restau(j, mat)) / 2;
-	}
-
-	/**
-	 * Initialisation de la classe (indispensable pour utiilser completeMatrix()
+	 * Initialisation de la classe (indispensable pour utiliser completeMatrix()
 	 * et get(int i, int j))
 	 * 
 	 * @param mat la matrice sur laquelle on souhaite travailler
 	 */
 	public static void initialiser(int[][] mat) {
+		// On crée la liste des moyennes clients et restaurants
 		moy_restau = new double[mat[0].length];
 		moy_client = new double[mat.length];
-		
+
 		moy_total = moyenne_total(mat);
 
+		// Et on les remplis
+		
 		// Enregistre la moyenne de chaque restaurant
 		for (int i = 0; i < moy_restau.length; i++) {
 			moy_restau[i] = moyenne_restau(i, mat);
@@ -149,12 +117,13 @@ public class Moyenne {
 		}
 
 		// Dit que l'initialisation est effectué
+		// Pour que le reste du programme de renvoie pas d'erreur
 		init = true;
 	}
 
 	/**
-	 * Crée la matrices des combinaisons des deux moeyennes si la classe à bien
-	 * été initialisées
+	 * Crée la matrices des combinaisons des deux moyennes
+	 * Il faut avoir préalablement initialisé la classe
 	 * 
 	 * @return la matrice toute remplis
 	 */
@@ -162,9 +131,10 @@ public class Moyenne {
 		// Vérifie que moy_client et moy_restau ont bien été initialisés
 		if (!init) {
 			System.out.println("Erreur : matrice non initialisée.");
-			return new double[moy_client.length][moy_restau.length];
+			return new double[0][0];
 		}
 
+		// On initialise la matrice finale
 		double[][] mat = new double[moy_client.length][moy_restau.length];
 
 		// Remplis la matrice en combinant les deux moyennes
@@ -172,15 +142,14 @@ public class Moyenne {
 			for (int j = 0; j < mat[0].length; j++) {
 				double moyClient = moy_client[i];
 				double moyRestau = moy_restau[j];
-				
-				// Pour gérer en cas de ligne ou colonne vide
-				if(moyClient==0 && moyRestau==0){
+
+				if (moyClient == 0 && moyRestau == 0) { // Si ce client et restaurant n'ont aucune note
 					mat[i][j] = Moyenne.moy_total;
-				}else if(moyClient==0){
+				} else if (moyClient == 0) { // Si le client n'a pas donné de notes
 					mat[i][j] = moyRestau;
-				}else if(moyRestau==0){
+				} else if (moyRestau == 0) { // Si le restaurant n'a pas reçus de notes
 					mat[i][j] = moyClient;
-				}else{
+				} else { // Sinon, si c'est un cas normal
 					mat[i][j] = (moyClient + moyRestau) / 2;
 				}
 			}
@@ -203,22 +172,33 @@ public class Moyenne {
 			return 0;
 		}
 
-		return (moy_client[i] + moy_restau[j]) / 2;
+		double moyClient = moy_client[i];
+		double moyRestau = moy_restau[j];
+
+		if (moyClient == 0 && moyRestau == 0) { // Si ce client et restaurant n'ont aucune note
+			return Moyenne.moy_total;
+		} else if (moyClient == 0) { // Si le client n'a pas donné de notes
+			return moyRestau;
+		} else if (moyRestau == 0) { // Si le restaurant n'a pas reçus de notes
+			return moyClient;
+		}
+		
+		// Sinon, si c'est un cas normal
+		return (moyClient + moyRestau) / 2;
 	}
 
+	
+	// Si vous voulez tester cette classe, décommentez ce main
+	
+	/*
 	public static void main(String[] args) {
 
 		int[][] mat = CsvFile.chargeTrain("train.csv");
-
-		/*
-		 * int[][] finalMat = completeMatrix(mat);
-		 * System.out.print(finalMat[125][15]);
-		 */
 
 		initialiser(mat);
 		matrix();
 
 	}
-
+	 */
 
 }
