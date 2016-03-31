@@ -138,10 +138,10 @@ public class SGD {
             for (int j = 0; j < table[0].length; j++){
             	combine[i][j] /= nb;
             	
-                if(combine[i][j]>5) {
-                    combine[i][j] = 5;
-                }else if(combine[i][j]<1) {
-                    combine[i][j] = 1;
+                if(combine[i][j]>=5.5) {
+                    combine[i][j] = 5.4;
+                }else if(combine[i][j]<0.5) {
+                    combine[i][j] = 0.5;
                 }
             }
         }

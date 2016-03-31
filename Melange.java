@@ -1,4 +1,10 @@
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 /**
  * Classe qui exploitera chacun des algorithmes que nous avons implémentés. Elle
@@ -10,25 +16,18 @@ public class Melange {
 	private static int h, l;
 
 	/**
-	 * Fonction pour remettre toutes les valeurs d'une matrice entre 1 et 5 (une
-	 * fois l'arrondi scientifique appliqué dessus)
+	 * Fonction pour faire la copie d'un tableau
 	 * 
 	 * @param m la matrice qu'il faut borner
 	 * @return une nouvelle matrice bornée
 	 */
-	private static double[][] bornage(double[][] m) {
+	private static double[][] copie(double[][] m) {
 		double[][] mNew = new double[h][l];
 
 		// Parcourt de toute la matrice
 		for (int i = 0; i < h; i++) {
 			for (int j = 0; j < l; j++) {
-				if (m[i][j] >= 5.5) {
-					mNew[i][j] = 5.4;
-				} else if (m[i][j] < 0.5) {
-					mNew[i][j] = 0.5;
-				} else {
-					mNew[i][j] = m[i][j];
-				}
+				mNew[i][j] = m[i][j];
 			}
 		}
 
@@ -136,6 +135,21 @@ public class Melange {
 		return fiable;
 	}
 
+	private static void image(double[][] tab, String nom){
+		try {
+		    BufferedImage bi = new BufferedImage(h, l, BufferedImage.TYPE_BYTE_GRAY);
+		    WritableRaster raster = bi.getRaster();
+	
+		    for(int i=0; i<h; i++)
+		        for(int j=0; j<l; j++)
+		            raster.setSample(i,j,0,tab[i][j]*36);
+
+			ImageIO.write(bi, "png", new File( nom + " non arrondi.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/*
 	private static double[][] remplissageFiable(double[][] mat, int[][] base, int[][] fiabilite, int nb){
 		double[][] fiable = new double[h][l];
@@ -194,8 +208,8 @@ public class Melange {
 
 		// Tableau de fiabilitée (plus la valeur est proche de 1, plus la
 		// prédiction est juste)
-		int nbFiable = 38000;
-		int[][] fiabilite = validite(entrainement, nbFiable);
+		//int nbFiable = 38000;
+		//int[][] fiabilite = validite(entrainement, nbFiable);
 
 		System.out.println("Fait");
 
@@ -236,7 +250,7 @@ public class Melange {
 		System.out.print("SVD...");
 		// Création de la matrice pour la SVD
 		// On reprend la matrice (que l'on a borné)
-		double[][] entrainementSVD = bornage(resultatMoyenneRegularise);
+		double[][] entrainementSVD = copie(resultatMoyenneRegularise);
 		// On y remet les valeurs de l'ensemble d'entrainement
 		reRemplissage(entrainementSVD, donneeValides);
 		// Et on lance l'algo
@@ -287,18 +301,10 @@ public class Melange {
 				System.out.print(".");
 
 			for (int j = 0; j < l; j++) {
-				double faibleFiabilite = (1 * resultatMoyenne[i][j] + 1 * resultatPearson[i][j]
-						+ 1 * resultatMoyenneRegularise[i][j] + 2 * SVD.get(i, j) + 2 * resultatSGD[i][j]) / 6;
-
-				double hauteFiabilite = (0 * resultatMoyenne[i][j] + 1 * resultatPearson[i][j]
-						+ 2 * resultatMoyenneRegularise[i][j] + 2 * SVD.get(i, j) + 2 * resultatSGD[i][j]) / 8;
-
-				double fiable = fiabilite[i][j] / nbFiable;
-
-				matriceFinale[i][j] = faibleFiabilite * fiable + hauteFiabilite * (1 - fiable);
+				matriceFinale[i][j] = (1 * resultatMoyenne[i][j] + 2 * resultatPearson[i][j] + 2 * resultatMoyenneRegularise[i][j] + 4 * SVD.get(i, j) + 4 * resultatSGD[i][j]) / 13;
 			}
 		}
-
+		
 		System.out.println("Fait");
 
 		
@@ -328,7 +334,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange 11122 01222 " + nbFiable + " b.zip");
+		PredictFile.zip("Melange 12244 pers -40 b.zip");
 
 		System.out.println("Travail accomplit.");
 	}
