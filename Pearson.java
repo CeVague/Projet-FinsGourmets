@@ -1,5 +1,4 @@
 
-
 public class Pearson {
 	private static double[] coefClient, coefRestau;
 	private static double[][] train;
