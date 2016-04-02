@@ -28,6 +28,21 @@ public class MoyenneTest {
 			assertEquals(5, (int) Math.round(Moyenne.moyenne_client(i, mat1)));
 		}
 		
+		
+		
+		
+		int[][] mat1ligne = new int[10][10];
+		for(int i=0;i<10;i++){
+			mat1ligne[i][0] = 1;
+		}
+		
+		Moyenne.initialiser(mat1ligne);
+		
+		for (int i=0; i < 10; i++) {
+			for (int j=0; j < 10; j++) {
+				assertEquals(1, (int) Math.round(Moyenne.get(i, j)));
+			}
+		}
 	}
 
 }
