@@ -33,6 +33,19 @@ public class Melange {
 
 		return mNew;
 	}
+	
+	private static void borne(double[][] m) {
+		// Parcourt de toute la matrice
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < l; j++) {
+				if(m[i][j]>=5.5){
+					m[i][j] = 5.4;
+				}else if(m[i][j]<0.5){
+					m[i][j] = 0.5;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Replace les valeurs d'entrainement dans la matrice
@@ -54,11 +67,23 @@ public class Melange {
 		    for(int i=0; i<h; i++)
 		        for(int j=0; j<l; j++)
 		            raster.setSample(i,j,0,tab[i][j]*36);
+            		//raster.setSample(i,j,0,Math.round(tab[i][j])*36);
 
 			ImageIO.write(bi, "png", new File( nom + " non arrondi.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void image(int[][] tab, String nom){
+		double[][] t = new double[h][l];
+	
+	    for(int i=0; i<h; i++)
+	        for(int j=0; j<l; j++)
+	            t[i][j] = tab[i][j];
+	    
+	    image(t, nom);
+
 	}
 	
 	/*
@@ -113,7 +138,6 @@ public class Melange {
 		l = entrainement[0].length;
 
 		System.out.println("Fait");
-
 
 		//System.out.print("Calcul des valeurs les plus fiables...");
 
@@ -176,7 +200,7 @@ public class Melange {
 
 		double[][] entrainementSGD = new double[h][l];
 		reRemplissage(entrainementSGD, donneeValides);
-
+/*
 		// Remplissage random car la matrice est très vide
 		for (int a = 0; a < 15000; a++) {
 			int i = (int) (Math.random() * h);
@@ -188,10 +212,12 @@ public class Melange {
 				a--;
 			}
 		}
-
-		SGD.facteurs(0.0002, 0.1, 20, 40, 300);
+*/
+		SGD.facteurs(0.0002, 0.1, 20, 48, 350);
 
 		double[][] resultatSGD = SGD.lance(entrainementSGD);
+		
+		borne(resultatSGD);
 
 		System.out.println("Fait");
 
@@ -245,7 +271,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange 12244 pers -40.zip");
+		PredictFile.zip("Melange 12244.zip");
 
 		System.out.println("Travail accomplit.");
 	}
