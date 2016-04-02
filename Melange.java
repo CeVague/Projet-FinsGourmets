@@ -46,95 +46,6 @@ public class Melange {
 		}
 	}
 
-	/**
-	 * Fonction pour décider des valeurs les plus fiables de la matrice. Pour
-	 * cela on supposera que plus nbNoteClient * nbNoteRestaurant est grand,
-	 * plus la note prédite sera probablement juste
-	 * 
-	 * @param m notre matrice d'apprentissage
-	 * @param min le nombre de valeurs minimum à classer
-	 * @return une matrice dont chaque case représente si c'est une case sûr ou
-	 *         non (0 si très faible, puis 1 pour la plus sûr, puis 2 etc...)
-	 */
-	private static int[][] validite(int[][] m, int min) {
-		int[][] f = new int[h][l]; // matrice des nbNoteClient *
-									// nbNoteRestaurant
-		int[] nbC = new int[h];
-		int[] nbR = new int[l];
-
-		// Calcul du nombre de notes de chaque client
-		for (int i = 0; i < h; i++) {
-			int nb = 0;
-			for (int j = 0; j < l; j++) {
-				if (m[i][j] != 0)
-					nb++;
-			}
-			nbC[i] = nb;
-		}
-
-		// Calcul du nombre de notes de chaque restaurant
-		for (int i = 0; i < l; i++) {
-			int nb = 0;
-			for (int j = 0; j < h; j++) {
-				if (m[j][i] != 0)
-					nb++;
-			}
-			nbR[i] = nb;
-		}
-
-		// Multiplication des deux
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < l; j++) {
-				f[i][j] = nbC[i] * nbR[j];
-			}
-		}
-
-		// Remise à 0 quand une note est présente à cet emplacement dans
-		// l'ensemble d'entrainement
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < l; j++) {
-				if (m[i][j] != 0) {
-					f[i][j] = 0;
-				}
-			}
-		}
-
-		// Matrice finale à renvoyer
-		int[][] fiable = new int[h][l];
-
-		int n = 0; // Nombre de cases remplis
-		int rang = 1; // Rang de fiabilitée
-
-		// Rangement par ordre croissant de fiabilité
-		while (n < min) {
-
-			// On recherche la valeur maximum de f[][]
-			int max = 0;
-
-			for (int i = 0; i < h; i++) {
-				for (int j = 0; j < l; j++) {
-					if (max < f[i][j])
-						max = f[i][j];
-				}
-			}
-
-			// On note toute les valeurs ==max dans fiable
-			// Et on les enlève de f
-			for (int i = 0; i < h; i++) {
-				for (int j = 0; j < l; j++) {
-					if (max == f[i][j]) {
-						n++;
-						f[i][j] = 0;
-						fiable[i][j] = rang;
-					}
-				}
-			}
-			rang++;
-		}
-
-		return fiable;
-	}
-
 	private static void image(double[][] tab, String nom){
 		try {
 		    BufferedImage bi = new BufferedImage(h, l, BufferedImage.TYPE_BYTE_GRAY);
@@ -204,14 +115,14 @@ public class Melange {
 		System.out.println("Fait");
 
 
-		System.out.print("Calcul des valeurs les plus fiables...");
+		//System.out.print("Calcul des valeurs les plus fiables...");
 
 		// Tableau de fiabilitée (plus la valeur est proche de 1, plus la
 		// prédiction est juste)
 		//int nbFiable = 38000;
 		//int[][] fiabilite = validite(entrainement, nbFiable);
 
-		System.out.println("Fait");
+		//System.out.println("Fait");
 
 
 		/**************** Initialisation des Algorithmes *****************/
@@ -334,7 +245,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange 12244 pers -40 b.zip");
+		PredictFile.zip("Melange 12244 pers -40.zip");
 
 		System.out.println("Travail accomplit.");
 	}
