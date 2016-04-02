@@ -6,7 +6,7 @@ public class SVD {
 	private static int phase = 0; // 0, 1 si table est init, 2 si USV sont init
 	private static Matrix MInit;
 	private static Matrix U;
-	private static Matrix S;
+	public static Matrix S;
 	private static Matrix V;
 	private static Matrix MFinal;
 

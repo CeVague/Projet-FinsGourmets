@@ -46,6 +46,11 @@ public class PredictFile {
 
 			// On écrit chaque note de la liste dans le fichier
 			for (Integer note : liste) {
+				if(note<1){
+					note = 1;
+				}else if(note>5){
+					note=5;
+				}
 				ffw.write(note + "\n");
 			}
 
