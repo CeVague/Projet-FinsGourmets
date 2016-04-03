@@ -175,7 +175,7 @@ public class Melange {
 
 		System.out.print("MoyenneRegularise...");
 
-		MoyenneRegularise.initialiser(entrainement, 14, 8);
+		MoyenneRegularise.initialiser(entrainement, 13, 8);
 
 		double[][] resultatMoyenneRegularise = MoyenneRegularise.matrix();
 
@@ -185,7 +185,7 @@ public class Melange {
 		System.out.print("SVD...");
 		// Création de la matrice pour la SVD
 		// On reprend la matrice (que l'on a borné)
-		double[][] entrainementSVD = copie(resultatMoyenneRegularise);
+		double[][] entrainementSVD = copie(resultatPearson);
 		// On y remet les valeurs de l'ensemble d'entrainement
 		reRemplissage(entrainementSVD, donneeValides);
 		// Et on lance l'algo
@@ -199,6 +199,7 @@ public class Melange {
 		System.out.print("SGD...");
 
 		double[][] entrainementSGD = new double[h][l];
+		
 		reRemplissage(entrainementSGD, donneeValides);
 /*
 		// Remplissage random car la matrice est très vide
@@ -238,7 +239,8 @@ public class Melange {
 				System.out.print(".");
 
 			for (int j = 0; j < l; j++) {
-				matriceFinale[i][j] = (1 * resultatMoyenne[i][j] + 2 * resultatPearson[i][j] + 2 * resultatMoyenneRegularise[i][j] + 4 * SVD.get(i, j) + 4 * resultatSGD[i][j]) / 13;
+				matriceFinale[i][j] = (1 * resultatMoyenne[i][j] + 2 * resultatPearson[i][j] +
+						2 * resultatMoyenneRegularise[i][j] + 3 * SVD.get(i, j) + 4 * resultatSGD[i][j]) / 12;
 			}
 		}
 		
@@ -271,7 +273,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange 12244.zip");
+		PredictFile.zip("Melange Final.zip");
 
 		System.out.println("Travail accomplit.");
 	}

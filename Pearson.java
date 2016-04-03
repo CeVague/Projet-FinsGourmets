@@ -107,7 +107,7 @@ public class Pearson {
     public static void initialiser(int[][] base){
     	// Initialisation de la moyenne
 		Moyenne.initialiser(base);
-		MoyenneRegularise.initialiser(base, 14, 8);
+		MoyenneRegularise.initialiser(base, 13, 8);
 		train = MoyenneRegularise.matrix();
     	
     	
@@ -136,7 +136,7 @@ public class Pearson {
             	}
             }
             
-            if(nb>140)
+            if(nb>120)
             	coefClient[i] = similarite_restaurant(tab, i);
     	}
     	
@@ -154,7 +154,7 @@ public class Pearson {
             	}
             }
     		
-            if(nb>250)
+            if(nb>225)
             	coefRestau[i] = similarite_client(tab, i);
     	}
     }
