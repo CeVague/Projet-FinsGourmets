@@ -160,17 +160,4 @@ public class MoyenneRegularise {
 		return (moy_total + moy_client[i] + moy_restau[j]);
 	}
 
-
-	// Si vous voulez tester cette classe, décommentez ce main
-	
-	/*
-	public static void main(String[] args) {
-
-		int[][] mat = CsvFile.chargeTrain("train.csv");
-
-		initialiser(mat, 25, 25);
-		matrix();
-
-	}
-	*/
 }

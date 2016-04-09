@@ -187,18 +187,4 @@ public class Moyenne {
 		return (moyClient + moyRestau) / 2;
 	}
 
-	
-	// Si vous voulez tester cette classe, décommentez ce main
-	
-	/*
-	public static void main(String[] args) {
-
-		int[][] mat = CsvFile.chargeTrain("train.csv");
-
-		initialiser(mat);
-		matrix();
-
-	}
-	 */
-
 }

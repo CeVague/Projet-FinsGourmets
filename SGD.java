@@ -75,11 +75,7 @@ public class SGD {
 					V[K][j] += alpha * (2 * eij * U[i][K] - beta * V[K][j]);
 				}
 			}
-			
-			//if(rien%50==0) System.out.print(".");
 		}
-		
-		//System.out.println("U et V ont étés trouvés");
 		
 		return multTout();
 	}
@@ -147,46 +143,6 @@ public class SGD {
         }
 		
 		return combine;
-	}
-	
-	public static void main(String[] args) {
-		
-		/*
-		 * factK = 11 et nb=10 marche bien et est rapide
-		 * factK = 20 et nb=20 résultats maximum
-		 */
-		facteurs(alpha, beta, 20, 20, 300);
-
-		double[][] combine = lance(CsvFile.chargeTrain("train.csv"));
-		
-		
-		System.out.println("Création des fichiers de sortie :");
-		
-		// Maintenant que l'on a initialiser tous nos algorithmes, on va prédire
-		// toute les données demandées dans dev.csv et test.csv
-		for (String nom : new String[] { "dev", "test" }) {
-			// Chargement de la liste des emplacements des notes à trouver
-			List<int[]> entree = CsvFile.chargeTest(nom + ".csv");
-
-			// Initialisation du .predict de sortie
-			PredictFile sortie = new PredictFile(nom + ".predict");
-
-			// Et on prédit les notes demandées
-			for (int[] couple : entree) {
-				sortie.add(combine[couple[0]][couple[1]]);
-			}
-
-			// Fermeture du .predict
-			sortie.close();
-			
-			System.out.println("- " + nom + ".predict fait");
-		}
-
-		// Zippage des deux fichiers
-		PredictFile.zip("SGD.zip");
-
-		System.out.println("Travail accomplit.");
-		
 	}
 
 }

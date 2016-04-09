@@ -85,45 +85,6 @@ public class Melange {
 	    image(t, nom);
 
 	}
-	
-	/*
-	private static double[][] remplissageFiable(double[][] mat, int[][] base, int[][] fiabilite, int nb){
-		double[][] fiable = new double[h][l];
-		
-		for(int i=0;i<h;i++){
-			for(int j=0;j<l;j++){
-				if(base[i][j]!=0){
-					fiable[i][j] = base[i][j];
-				}
-			}
-		}
-		
-		int nbTot = 0;
-		int rang = 1;
-		boolean ok = true;
-		
-		while(ok){
-			for(int i=0;i<h;i++){
-				for(int j=0;j<l;j++){
-					if(nbTot>nb){
-						ok = false;
-						break;
-					}
-					
-					if(rang==fiabilite[i][j]){
-						fiable[i][j] = mat[i][j];
-						nbTot++;
-					}
-				}
-				
-				if(!ok)	break;
-			}
-			rang++;
-		}
-		
-		return fiable;
-	}
-	*/
 
 	public static void main(String[] args) {
 
