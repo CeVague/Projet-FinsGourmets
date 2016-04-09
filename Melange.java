@@ -34,6 +34,11 @@ public class Melange {
 		return mNew;
 	}
 	
+	/**
+	 * Fonction pour éviter que les valeurs sortent des bornes [0.5;5.5]
+	 * 
+	 * @param m la matrice à borner
+	 */
 	private static void borne(double[][] m) {
 		// Parcourt de toute la matrice
 		for (int i = 0; i < h; i++) {
@@ -59,6 +64,12 @@ public class Melange {
 		}
 	}
 
+	/**
+	 * Crée une image à partire de la matrice d'entrée
+	 * 
+	 * @param tab la matrice (avec des valeurs entre 0 et 6 inclus)
+	 * @param nom le nom du fichier de sortie sans extension
+	 */
 	private static void image(double[][] tab, String nom){
 		try {
 		    BufferedImage bi = new BufferedImage(h, l, BufferedImage.TYPE_BYTE_GRAY);
@@ -75,6 +86,13 @@ public class Melange {
 		}
 	}
 	
+	/**
+	 * Crée une image à partire de la matrice d'entrée
+	 * 
+	 * @param tab la matrice (avec des valeurs entre 0 et 6 inclus)
+	 * @param nom le nom du fichier de sortie sans extension
+	 */
+	@SuppressWarnings("unused")
 	private static void image(int[][] tab, String nom){
 		double[][] t = new double[h][l];
 	
@@ -99,15 +117,6 @@ public class Melange {
 		l = entrainement[0].length;
 
 		System.out.println("Fait");
-
-		//System.out.print("Calcul des valeurs les plus fiables...");
-
-		// Tableau de fiabilitée (plus la valeur est proche de 1, plus la
-		// prédiction est juste)
-		//int nbFiable = 38000;
-		//int[][] fiabilite = validite(entrainement, nbFiable);
-
-		//System.out.println("Fait");
 
 
 		/**************** Initialisation des Algorithmes *****************/
@@ -145,7 +154,7 @@ public class Melange {
 
 		System.out.print("SVD...");
 		// Création de la matrice pour la SVD
-		// On reprend la matrice (que l'on a borné)
+		// On reprend la matrice de Pearson (que l'on a borné)
 		double[][] entrainementSVD = copie(resultatPearson);
 		// On y remet les valeurs de l'ensemble d'entrainement
 		reRemplissage(entrainementSVD, donneeValides);
@@ -162,19 +171,7 @@ public class Melange {
 		double[][] entrainementSGD = new double[h][l];
 		
 		reRemplissage(entrainementSGD, donneeValides);
-/*
-		// Remplissage random car la matrice est très vide
-		for (int a = 0; a < 15000; a++) {
-			int i = (int) (Math.random() * h);
-			int j = (int) (Math.random() * l);
 
-			if (entrainementSGD[i][j] == 0) {
-				entrainementSGD[i][j] = resultatPearson[i][j];
-			} else {
-				a--;
-			}
-		}
-*/
 		SGD.facteurs(0.0002, 0.1, 20, 48, 350);
 
 		double[][] resultatSGD = SGD.lance(entrainementSGD);
@@ -196,9 +193,7 @@ public class Melange {
 		double[][] matriceFinale = new double[h][l];
 
 		for (int i = 0; i < h; i++) {
-			if (i % 150 == 0)
-				System.out.print(".");
-
+			// Pondération de chaque prédictions de chaque algorithme
 			for (int j = 0; j < l; j++) {
 				matriceFinale[i][j] = (1 * resultatMoyenne[i][j] + 2 * resultatPearson[i][j] +
 						2 * resultatMoyenneRegularise[i][j] + 3 * SVD.get(i, j) + 4 * resultatSGD[i][j]) / 12;
@@ -213,10 +208,10 @@ public class Melange {
 		
 		System.out.println("Création des fichiers de sortie :");
 
-		// Maintenant que l'on a initialiser tous nos algorithmes, on va prédire
+		// Maintenant que l'on a notre matrice de prédictions, on va noter
 		// toutes les données demandées dans dev.csv et test.csv
 		for (String nom : new String[] { "dev", "test" }) {
-			// Chargement de la liste des emplacements des notes à trouver
+			// Chargement de la liste des emplacements des notes à prédire
 			List<int[]> entree = CsvFile.chargeTest(nom + ".csv");
 
 			// Initialisation du .predict de sortie
@@ -234,7 +229,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange Final.zip");
+		PredictFile.zip("Melange clone Final.zip");
 
 		System.out.println("Travail accomplit.");
 	}

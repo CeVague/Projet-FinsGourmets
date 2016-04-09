@@ -2,21 +2,39 @@
 public class Pearson {
 	private static double[] coefClient, coefRestau;
 	private static double[][] train;
-	
-	private static double similarite_restaurant(double[] tab, int client) {
+    
+	/**
+	 * Calcul la similaritée (coef de Pearson) d'un client ou d'un restaurant
+	 * 
+	 * @param tab le tableau d'entrainement
+	 * @param id le numéro du client ou du restaurant concernée
+	 * @param qui si c'est l'id d'une "client" ou d'un "restaurant"
+	 * @return le coef
+	 */
+	private static double similarite(double[] tab, int id, String qui) {
         double s1 = 0.0;
         double s2 = 0.0;
         double s3 = 0.0;
 
-        for (int i = 0; i < tab.length; i++) {
+        double moyenne_qui;
+        double[] moyenne;
+        
+        if(qui == "client"){
+        	moyenne = Moyenne.moy_client;
+        	moyenne_qui = Moyenne.moy_restau[id];
+        }else {
+        	moyenne = Moyenne.moy_restau;
+        	moyenne_qui = Moyenne.moy_client[id];
+        }
 
-        	double moy = Moyenne.moy_total;
+    	double moy = Moyenne.moy_total;
+        for (int i = 0; i < tab.length; i++) {
         	
             if (tab[i] != 0) {
-                double val = Moyenne.moy_restau[i] - moy;
-                s1 += val * (tab[i] - Moyenne.moy_client[client]);
+                double val = moyenne[i] - moy;
+                s1 += val * (tab[i] - moyenne_qui);
                 s2 += Math.pow(val, 2);
-                s3 += Math.pow(tab[i] - Moyenne.moy_client[client], 2);
+                s3 += Math.pow(tab[i] - moyenne_qui, 2);
             }
         }
 
@@ -27,19 +45,35 @@ public class Pearson {
         return s1 / Math.sqrt(s2 * s3);
     }
 	
-	private static double vote_pondere_restaurant(int client, int restau) {
-        double vp = 0.0;
+	/**
+	 * Modifie la note moyenne selon le coef de Pearson
+	 * 
+	 * @param client le numéro du client
+	 * @param restau le numéro du restaurant
+	 * @param qui si on cherche la moyenne client ou restaurant
+	 * @return la nouvelle moyenne
+	 */
+	private static double vote_pondere(int client, int restau, String qui) {
+        double coef, moy;
+        
+        if(qui == "client"){
+            coef = coefRestau[restau];
+            moy = Moyenne.moy_restau[restau];
+        }else {
+            coef = coefClient[client];
+            moy = Moyenne.moy_client[client];
+        }
+        
         double s1 = 0.0;
         double s2 = 0.0;
-
-        double x = coefClient[client];
- 
-        if (x != 0) {
-            s1 += x * (train[client][restau] - Moyenne.moy_client[client]);
-            s2 += Math.abs(x);
+        
+        if (coef != 0) {
+            s1 += coef * (train[client][restau] - moy);
+            s2 += Math.abs(coef);
         }
 
-        vp = train[client][restau];
+        double vp = train[client][restau];
+        
         if(s2!=0){
             vp += s1 / s2;
         }
@@ -53,56 +87,6 @@ public class Pearson {
         return vp;
     }
     
-
-	private static double similarite_client(double[] tab, int restaurant) {
-        double s1 = 0.0;
-        double s2 = 0.0;
-        double s3 = 0.0;
-
-        for (int i = 0; i < tab.length; i++) {
-
-        	double moy = Moyenne.moy_total;
-        	
-            if (tab[i] != 0) {
-                double val = Moyenne.moy_client[i] - moy;
-                s1 += val * (tab[i] - Moyenne.moy_restau[restaurant]);
-                s2 += Math.pow(val, 2);
-                s3 += Math.pow(tab[i] - Moyenne.moy_restau[restaurant], 2);
-            }
-        }
-
-        if (s1 == 0 || s2 == 0 || s3 == 0) {
-            return 0;
-        }
-        
-        return s1 / Math.sqrt(s2 * s3);
-    }
-	
-    private static double vote_pondere_client(int client, int restau) {
-        double vp = 0.0;
-        double s1 = 0.0;
-        double s2 = 0.0;
-
-        double x = coefRestau[restau];
- 
-        if (x != 0) {
-            s1 += x * (train[client][restau] - Moyenne.moy_restau[restau]);
-            s2 += Math.abs(x);
-        }
-        
-        vp = train[client][restau];
-        if(s2!=0){
-            vp += s1 / s2;
-        }
-        
-        if(vp>5){
-            return 5;
-        }else if(vp<1){
-            return 1;
-        }
-        
-        return vp;
-    }
     
     public static void initialiser(int[][] base){
     	// Initialisation de la moyenne
@@ -137,7 +121,7 @@ public class Pearson {
             }
             
             if(nb>120)
-            	coefClient[i] = similarite_restaurant(tab, i);
+            	coefClient[i] = similarite(tab, i, "restaurant");
     	}
     	
 
@@ -155,14 +139,26 @@ public class Pearson {
             }
     		
             if(nb>225)
-            	coefRestau[i] = similarite_client(tab, i);
+            	coefRestau[i] = similarite(tab, i, "client");
     	}
     }
     
+    /**
+     * Pour récupérer une prédiction (après initialisation)
+     * 
+     * @param i
+     * @param j
+     * @return la valeur prédite
+     */
     public static double get(int i, int j){
-    	return (vote_pondere_client(i, j) + vote_pondere_restaurant(i, j))/2;
+    	return (vote_pondere(i, j, "client") + vote_pondere(i, j, "restaurant"))/2;
     }
     
+    /**
+     * Pour récupérer la matrice de prédiction
+     * 
+     * @return la matrice en question
+     */
     public static double[][] matrix(){
     	double[][] plein = new double[train.length][train[0].length];
     	

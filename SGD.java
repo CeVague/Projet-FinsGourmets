@@ -53,6 +53,7 @@ public class SGD {
 		h = H;
 		l = L;
 		
+		// Initialisation random de U et V
 		U = new double[h][factK];
 		V = new double[factK][l];
 		for (int K = 0; K < factK; K++) {
@@ -64,8 +65,9 @@ public class SGD {
             }
 		}
 
-
+		// On applique la SGD autant de fois que demandé
 		for(int rien=0;rien<iterations;rien++) {
+			// On ne calcul les erreurs que aux endroits où on connait les notes
 			for(double[] d : M){
 				int i = (int) d[0];
 				int j = (int) d[1];

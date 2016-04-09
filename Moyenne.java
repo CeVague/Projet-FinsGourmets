@@ -51,6 +51,7 @@ public class Moyenne {
 
 		// On parcourt tous les clients
 		for (int i = 0; i < mat.length; i++) {
+			// Et on somme toutes les valeurs (pour les diviser ensuite)
 			if (mat[i][restau] != 0) {
 				count++;
 				sum += mat[i][restau];
@@ -78,6 +79,7 @@ public class Moyenne {
 
 		// On parcourt tous les restaurants
 		for (int j = 0; j < mat[0].length; j++) {
+			// Et on somme toutes les valeurs (pour les diviser ensuite)
 			if (mat[client][j] != 0) {
 				count++;
 				sum += mat[client][j];
@@ -131,7 +133,7 @@ public class Moyenne {
 		// Vérifie que moy_client et moy_restau ont bien été initialisés
 		if (!init) {
 			System.out.println("Erreur : matrice non initialisée.");
-			return new double[0][0];
+			return null;
 		}
 
 		// On initialise la matrice finale
@@ -143,14 +145,14 @@ public class Moyenne {
 				double moyClient = moy_client[i];
 				double moyRestau = moy_restau[j];
 
-				if (moyClient == 0 && moyRestau == 0) { // Si ce client et restaurant n'ont aucune note
+				if (moyClient != 0 && moyRestau != 0) { // Si c'est un cas normal
+					mat[i][j] = (moyClient + moyRestau) / 2;
+				} else if (moyClient == 0 && moyRestau == 0) { // Si ce client et restaurant n'ont aucune note
 					mat[i][j] = Moyenne.moy_total;
 				} else if (moyClient == 0) { // Si le client n'a pas donné de notes
 					mat[i][j] = moyRestau;
-				} else if (moyRestau == 0) { // Si le restaurant n'a pas reçus de notes
+				} else { // Si le restaurant n'a pas reçus de notes
 					mat[i][j] = moyClient;
-				} else { // Sinon, si c'est un cas normal
-					mat[i][j] = (moyClient + moyRestau) / 2;
 				}
 			}
 		}
@@ -175,16 +177,16 @@ public class Moyenne {
 		double moyClient = moy_client[i];
 		double moyRestau = moy_restau[j];
 
-		if (moyClient == 0 && moyRestau == 0) { // Si ce client et restaurant n'ont aucune note
+
+		if (moyClient != 0 && moyRestau != 0) { // Si c'est un cas normal
+			return (moyClient + moyRestau) / 2;
+		} else if (moyClient == 0 && moyRestau == 0) { // Si ce client et restaurant n'ont aucune note
 			return Moyenne.moy_total;
 		} else if (moyClient == 0) { // Si le client n'a pas donné de notes
 			return moyRestau;
-		} else if (moyRestau == 0) { // Si le restaurant n'a pas reçus de notes
+		} else { // Si le restaurant n'a pas reçus de notes
 			return moyClient;
 		}
-		
-		// Sinon, si c'est un cas normal
-		return (moyClient + moyRestau) / 2;
 	}
 
 }

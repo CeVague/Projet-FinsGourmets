@@ -18,8 +18,10 @@ public class MoyenneRegularise {
 		double count = 0;
 		double sum = 0;
 
+		// On parcourt toute la matrice
 		for (int i = 0; i < mat.length; i++) {
 			for (int j = 0; j < mat[0].length; j++) {
+				// Et on somme toutes les valeurs (pour les diviser ensuite)
 				if (mat[i][j] != 0) {
 					count++;
 					sum += mat[i][j];
@@ -35,7 +37,7 @@ public class MoyenneRegularise {
 	}
 
 	/**
-	 * Fonction qui calcule la moyenne des notes qu'a donn� un client
+	 * Fonction qui calcule la moyenne régularisée des notes qu'a donn� un client
 	 * 
 	 * @param client l'indice identifiant le client.
 	 * @param mat une matrice de donn�es fournis par chargeTrain de la classe
@@ -46,7 +48,9 @@ public class MoyenneRegularise {
 		double count = 0;
 		double sum = 0;
 
+		// On parcourt toute la matrice
 		for (int j = 0; j < mat[0].length; j++) {
+			// Et on somme toutes les valeurs (pour les diviser ensuite)
 			if (mat[client][j] != 0) {
 				count++;
 				sum += (mat[client][j] - moy_total);
@@ -61,7 +65,7 @@ public class MoyenneRegularise {
 	}
 
 	/**
-	 * Fonction qui calcule la note moyenne qu'a obtenu un restaurant
+	 * Fonction qui calcule la note moyenne régularisée qu'a obtenu un restaurant
 	 * 
 	 * @param restau l'indice indentifiant le restaurant dont on souhaite
 	 *            calculer la moyenne.
@@ -73,7 +77,9 @@ public class MoyenneRegularise {
 		double count = 0;
 		double sum = 0;
 
+		// On parcourt toute la matrice
 		for (int i = 0; i < mat.length; i++) {
+			// Et on somme toutes les valeurs (pour les diviser ensuite)
 			if (mat[i][restau] != 0) {
 				count++;
 				sum += (mat[i][restau] - moy_total - moy_client[i]);
@@ -126,7 +132,7 @@ public class MoyenneRegularise {
 		// Vérifie que moy_client et moy_restau ont bien été initialisés
 		if (!init) {
 			System.out.println("Erreur : matrice non initialisée.");
-			return new double[0][0];
+			return null;
 		}
 
 		double[][] mat = new double[moy_client.length][moy_restau.length];

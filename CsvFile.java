@@ -75,7 +75,6 @@ public class CsvFile {
             for (int k = 0; k <= 2; k++) {
                 colonnes[k] = Integer.parseInt(colonnes_split[k]);
             }
-            // System.out.println(colonnes[1]);
             // Remplissage de la matrice
             // Si la ligne qu'on récupérée est "3,0,5"
             // Grâce au split elle stocké dans colonnes_split {"3","0","5"}
