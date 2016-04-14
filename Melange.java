@@ -187,7 +187,7 @@ public class Melange {
 		/********************* Prédiction des notes **********************/
 
 		
-		System.out.print("Création matrice finale");
+		System.out.print("Création matrice finale...");
 
 		// Matrice de combinaison finale des prédictions
 		double[][] matriceFinale = new double[h][l];
@@ -195,8 +195,8 @@ public class Melange {
 		for (int i = 0; i < h; i++) {
 			// Pondération de chaque prédictions de chaque algorithme
 			for (int j = 0; j < l; j++) {
-				matriceFinale[i][j] = (1 * resultatMoyenne[i][j] + 2 * resultatPearson[i][j] +
-						2 * resultatMoyenneRegularise[i][j] + 3 * SVD.get(i, j) + 4 * resultatSGD[i][j]) / 12;
+				matriceFinale[i][j] = (1 * resultatMoyenne[i][j] + 3 * resultatPearson[i][j] +
+						2 * resultatMoyenneRegularise[i][j] + 3 * SVD.get(i, j) + 4 * resultatSGD[i][j]) / 13;
 			}
 		}
 		
@@ -229,7 +229,7 @@ public class Melange {
 		}
 
 		// Zippage des deux fichiers
-		PredictFile.zip("Melange clone Final.zip");
+		PredictFile.zip("Melange Final.zip");
 
 		System.out.println("Travail accomplit.");
 	}
