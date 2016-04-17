@@ -1,5 +1,5 @@
 
-public class MoyenneRegularise {
+public class MoyenneRegularisee {
 
 	public static double[] moy_restau;
 	public static double[] moy_client;

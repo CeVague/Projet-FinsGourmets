@@ -145,9 +145,9 @@ public class Melange {
 
 		System.out.print("MoyenneRegularise...");
 
-		MoyenneRegularise.initialiser(entrainement, 13, 8);
+		MoyenneRegularisee.initialiser(entrainement, 13, 8);
 
-		double[][] resultatMoyenneRegularise = MoyenneRegularise.matrix();
+		double[][] resultatMoyenneRegularise = MoyenneRegularisee.matrix();
 
 		System.out.println("Fait");
 

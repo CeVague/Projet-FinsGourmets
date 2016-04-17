@@ -91,8 +91,8 @@ public class Pearson {
     public static void initialiser(int[][] base){
     	// Initialisation de la moyenne
 		Moyenne.initialiser(base);
-		MoyenneRegularise.initialiser(base, 13, 8);
-		train = MoyenneRegularise.matrix();
+		MoyenneRegularisee.initialiser(base, 13, 8);
+		train = MoyenneRegularisee.matrix();
     	
     	
 		// Sauvegarde des dimentions de la matrice
