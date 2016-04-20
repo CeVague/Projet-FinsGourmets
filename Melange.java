@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -63,7 +62,7 @@ public class Melange {
 			m[i[0]][i[1]] = i[2];
 		}
 	}
-
+	
 	/**
 	 * Crée une image à partire de la matrice d'entrée
 	 * 
@@ -71,17 +70,38 @@ public class Melange {
 	 * @param nom le nom du fichier de sortie sans extension
 	 */
 	private static void image(double[][] tab, String nom){
-		try {
-		    BufferedImage bi = new BufferedImage(h, l, BufferedImage.TYPE_BYTE_GRAY);
-		    WritableRaster raster = bi.getRaster();
-	
-		    for(int i=0; i<h; i++)
-		        for(int j=0; j<l; j++)
-		            raster.setSample(i,j,0,tab[i][j]*36);
-            		//raster.setSample(i,j,0,Math.round(tab[i][j])*36);
-
-			ImageIO.write(bi, "png", new File( nom + " non arrondi.png"));
+		int pixel = 1;
+		BufferedImage theImage = new BufferedImage(l*pixel, h*pixel, BufferedImage.TYPE_INT_RGB);
+	    for(int i=0; i<l; i++){
+	        for(int j=0; j<h; j++){
+		    	int x = (int) Math.round(tab[j][i]);
+		        int value;
+		        if(x<1){
+		        	value = 255 << 16 | 255 << 8 | 255;
+		        }else if(x==1){
+		        	value = 0 << 16 | 0 << 8 | 255;
+		        }else if(x==2){
+		        	value = 0 << 16 | 255 << 8 | 0;
+		        }else if(x==3){
+		        	value = 255 << 16 | 255 << 8 | 0;
+		        }else if(x==4){
+		        	value = 255 << 16 | 0 << 8 | 0;
+		        }else if(x==5){
+		        	value = 255 << 16 | 0 << 8 | 255;
+		        }else{
+		        	value = 0;
+		        }
+		        
+		        for(int a=0;a<pixel;a++)
+			        for(int b=0;b<pixel;b++)
+			        	theImage.setRGB(i*pixel+a, j*pixel+b, value);
+		    }
+		}
+	    File outputfile = new File(nom + ".png");
+	    try {
+			ImageIO.write(theImage, "png", outputfile);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -130,7 +150,7 @@ public class Melange {
 		Moyenne.initialiser(entrainement);
 
 		double[][] resultatMoyenne = Moyenne.matrix();
-
+		
 		System.out.println("Fait");
 
 
